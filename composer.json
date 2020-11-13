@@ -1,0 +1,20 @@
+{
+  "name": "pm-cms/api",
+  "description": "Api for the pm-cms app.",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "": "src/"
+    }
+  },
+  "require": {
+    "vlucas/phpdotenv": "^5.2",
+    "slim/slim": "4.*",
+    "slim/psr7": "^1.2",
+    "php-di/php-di": "^6.3",
+    "php-di/slim-bridge": "^3.0",
+    "mongodb/mongodb": "^1.7",
+    "lcobucci/jwt": "^3.3",
+    "firebase/php-jwt": "^5.2"
+  }
+}
