@@ -14,15 +14,13 @@ class AuthMiddleware {
   public function __invoke(Request $request, RequestHandler $handler): Response
   {
     $authHeader = $request->getHeader('Authorization');
-    $token = substr($authHeader[0], 7);
-
-    $token = TokenService::validateToken($token);
+    $token = isset($authHeader[0]) ? substr($authHeader[0], 7) : null;
 
     $responseFactory = new ResponseFactory();
     $response = $responseFactory->createResponse();
 
     if($token) {
-      $arrayToken = (array) $token;
+      $arrayToken = (array) TokenService::validateToken($token);
 
       if($arrayToken['active']) {
         return $response = $handler->handle($request);

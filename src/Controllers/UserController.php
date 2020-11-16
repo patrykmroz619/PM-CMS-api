@@ -21,9 +21,8 @@ class UserController {
   }
 
   public function signIn(Request $request, Response $response) {
-    $params = $request->getQueryParams();
-
-    $user = $this->userDataValidator->signInValidate($params, $this->userModel);
+    $body = $request->getParsedBody();
+    $user = $this->userDataValidator->signInValidate($body, $this->userModel);
 
     $activeToken = TokenService::getActiveToken($user['uid']);
     $refreshToken = TokenService::getRefreshToken($user['uid']);
@@ -47,8 +46,8 @@ class UserController {
   }
 
   public function signUp(Request $request, Response $response) {
-    $params = $request->getQueryParams();
-    $this->userDataValidator->signUpValidate($params, $this->userModel);
+    $body = $request->getParsedBody();
+    $this->userDataValidator->signUpValidate($body, $this->userModel);
 
     $uid = uniqid();
     $activeToken = TokenService::getActiveToken($uid);
@@ -56,12 +55,12 @@ class UserController {
 
     $userData = [
       'uid' => $uid,
-      'email' => $params['email'],
-      'password' => password_hash($params['password'], PASSWORD_DEFAULT),
+      'email' => $body['email'],
+      'password' => password_hash($body['password'], PASSWORD_DEFAULT),
       'refreshToken' => $refreshToken
     ];
 
-    $this->userModel->create($userData);
+    $this->userModel->insertOne($userData);
 
     $userData['activeToken'] = $activeToken;
     $response->getBody()->write(json_encode($userData));
