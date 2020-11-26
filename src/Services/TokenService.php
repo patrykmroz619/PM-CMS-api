@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Services;
 
+use AppExceptions\AuthExceptions\JWTWasNotPassedException;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Exception;
 use \Firebase\JWT\JWT;
 use Settings\Settings;
@@ -31,6 +33,17 @@ class TokenService {
     {
       return null;
     }
+  }
+
+  public static function getTokenFromRequest(Request $request): string
+  {
+    $authHeader = $request->getHeader('Authorization');
+
+    if(!isset($authHeader[0]))
+      throw new JWTWasNotPassedException();
+
+    $token = substr($authHeader[0], 7);
+    return $token;
   }
 
   private static function generateToken(string $uid, $active): string

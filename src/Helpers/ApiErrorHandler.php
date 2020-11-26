@@ -92,6 +92,6 @@ class ApiErrorHandler extends ErrorHandler {
     $response = $this->responseFactory->createResponse($statusCode);
     $response->getBody()->write($payload);
 
-    return $response;;
+    return $response;
   }
 }

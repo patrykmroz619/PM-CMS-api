@@ -4,6 +4,7 @@ declare (strict_types=1);
 
 namespace Controllers;
 
+use AppExceptions\AuthExceptions\InvalidRefreshTokenException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Models\UserModel;
@@ -94,8 +95,7 @@ class AuthController {
 
   public function refreshToken(Request $request, Response $response): Response
   {
-    $authHeader = $request->getHeader('Authorization');
-    $token = isset($authHeader[0]) ? substr($authHeader[0], 7) : '';
+    $token = TokenService::getTokenFromRequest($request);
 
     $arrayToken = (array) TokenService::validateToken($token);
 
@@ -113,9 +113,11 @@ class AuthController {
           'activeToken' => $newActiveToken,
           'refreshToken' => $newRefreshToken
         ]));
+
+        return $response;
       }
     }
 
-    return $response->withStatus(401);
+    throw new InvalidRefreshTokenException();
   }
 }

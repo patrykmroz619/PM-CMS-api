@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Controllers\AuthController;
 use Controllers\MainController;
-use DI\Definition\Source\Autowiring;
+use Controllers\UserController;
 use Middlewares\AuthMiddleware;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
@@ -16,5 +16,6 @@ return function (App $app) {
 
   $app->group('', function (RouteCollectorProxy $group) {
     $group->get('/', [MainController::class, 'hello']);
+    $group->get('/activeUser', [UserController::class, 'getActiveUser']);
   })->add(new AuthMiddleware());
 };
