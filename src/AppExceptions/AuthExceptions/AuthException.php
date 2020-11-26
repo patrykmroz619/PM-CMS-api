@@ -8,10 +8,10 @@ use AppExceptions\AppException;
 
 class AuthException extends AppException
 {
-  public function __construct(string $message)
+  public function __construct(string $message, string $type = 'AUTH_ERROR')
   {
     $this->message = $message;
     $this->code = 401;
-    $this->type = 'AUTH_ERROR';
+    $this->type = $type;
   }
 }

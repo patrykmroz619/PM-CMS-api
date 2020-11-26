@@ -27,6 +27,7 @@ class TokenService {
     $config = self::getConfig();
     try
     {
+      JWT::$leeway = $config['leeway'];
       return JWT::decode($tokenAsString, $config['hmacKey'], array('HS256'));
     }
     catch (Exception $e)
@@ -76,6 +77,7 @@ class TokenService {
       'jti' => $tokenConfig['jti'],
       'access_exp' => $tokenConfig['access_exp'],
       'refresh_exp' => $tokenConfig['refresh_exp'],
+      'leeway' => $tokenConfig['leeway'],
       'hmacKey' => $tokenConfig['hmacKey']
     ];
   }
