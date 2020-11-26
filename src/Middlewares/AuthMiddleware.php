@@ -4,6 +4,7 @@ declare (strict_types=1);
 
 namespace Middlewares;
 
+use Models\UserModel;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
@@ -14,31 +15,15 @@ class AuthMiddleware {
   public function __invoke(Request $request, RequestHandler $handler): Response
   {
     $authHeader = $request->getHeader('Authorization');
-    $token = isset($authHeader[0]) ? substr($authHeader[0], 7) : null;
+    $token = isset($authHeader[0]) ? substr($authHeader[0], 7) : '';
 
     $responseFactory = new ResponseFactory();
     $response = $responseFactory->createResponse();
+    $arrayToken = (array) TokenService::validateToken($token);
 
-    if($token) {
-      $arrayToken = (array) TokenService::validateToken($token);
-
-      if($arrayToken['active']) {
-        return $response = $handler->handle($request);
-      } else {
-        $uid = $arrayToken['uid'];
-        $newActiveToken = TokenService::getActiveToken($uid);
-        $newRefreshToken = TokenService::getRefreshToken($uid);
-
-        $response->getBody()->write(json_encode([
-          'activeToken' => $newActiveToken,
-          'refreshToken' => $newRefreshToken
-        ]));
-
-        return $response->withStatus(401);
-      }
-
-    } else {
+    if(!empty($arrayToken) && $arrayToken['active'])
+      return $response = $handler->handle($request);
+    else
       return $response->withStatus(401);
-    }
   }
 }

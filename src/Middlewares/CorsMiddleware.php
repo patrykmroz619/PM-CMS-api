@@ -12,7 +12,6 @@ use Slim\Psr7\Factory\ResponseFactory;
 class CorsMiddleware {
   public function __invoke(Request $request, RequestHandler $handler): Response
   {
-    var_dump($request->getMethod());
     if($request->getMethod() !== 'OPTIONS') {
       $response = $handler->handle($request);
     } else {
