@@ -2,94 +2,38 @@
 
 declare (strict_types=1);
 
-namespace Controllers;
+namespace Api\Controllers;
 
-use AppExceptions\AuthExceptions\InvalidRefreshTokenException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Models\UserModel;
-use Services\TokenService;
-use Validators\UserDataValidator;
+use Api\Services\AuthService;
+use Api\Services\TokenService;
 
 class AuthController {
-  private UserModel $userModel;
-  private UserDataValidator $userDataValidator;
+  private AuthService $authService;
 
-  public function __construct(UserModel $userModel, UserDataValidator $userDataValidator)
+  public function __construct(AuthService $authService)
   {
-    $this->userModel = $userModel;
-    $this->userDataValidator = $userDataValidator;
+    $this->authService = $authService;
   }
 
   public function signIn(Request $request, Response $response): Response
   {
     $body = $request->getParsedBody();
-    $user = $this->userDataValidator->signInValidate($body, $this->userModel);
 
-    $activeToken = TokenService::getActiveToken($user['uid']);
-    $refreshToken = TokenService::getRefreshToken($user['uid']);
-
-    $this->userModel->update(
-      ['email' => $user['email'], 'uid' => $user['uid']],
-      ['refreshToken' => $refreshToken]
-    );
-
-    $responseData = [
-      'userData' => [
-        'uid' => $user['uid'],
-        'email' => $user['email'],
-        'name' => $user['name'] ?? null,
-        'surname' => $user['surname'] ?? null,
-        'company' => $user['company'] ?? null
-      ],
-      'tokens' => [
-        'activeToken' => $activeToken,
-        'refreshToken' => $refreshToken
-      ]
-    ];
+    $responseData = $this->authService->signIn($body);
 
     $response->getBody()->write(json_encode($responseData));
-
     return $response;
   }
 
   public function signUp(Request $request, Response $response): Response
   {
     $body = $request->getParsedBody();
-    $this->userDataValidator->signUpValidate($body, $this->userModel);
 
-    $uid = uniqid();
-
-    $userData = [
-      'uid' => $uid,
-      'email' => $body['email'],
-      'name' => $body['name'],
-      'surname' => $body['surname'],
-      'company' => $body['company'],
-      'password' => password_hash($body['password'], PASSWORD_DEFAULT)
-    ];
-
-    $this->userModel->insertOne($userData);
-
-    $activeToken = TokenService::getActiveToken($uid);
-    $refreshToken = TokenService::getRefreshToken($uid);
-
-    $responseData = [
-      'userData' => [
-        'uid' => $userData['uid'],
-        'email' => $userData['email'],
-        'name' => $userData['name'] ?? null,
-        'surname' => $userData['surname'] ?? null,
-        'company' => $userData['company'] ?? null
-      ],
-      'tokens' => [
-        'activeToken' => $activeToken,
-        'refreshToken' => $refreshToken
-      ]
-    ];
+    $responseData = $this->authService->signUp($body);
 
     $response->getBody()->write(json_encode($responseData));
-
     return $response;
   }
 
@@ -97,27 +41,9 @@ class AuthController {
   {
     $token = TokenService::getTokenFromRequest($request);
 
-    $arrayToken = (array) TokenService::validateToken($token);
+    $newTokens = $this->authService->refreshToken($token);
 
-    if(!empty($arrayToken) && !$arrayToken['active']) {
-      $uid = $arrayToken['uid'];
-      $user = $this->userModel->findOne(['uid' => $uid]);
-
-      if($user['refreshToken'] == $token) {
-        $newActiveToken = TokenService::getActiveToken($uid);
-        $newRefreshToken = TokenService::getRefreshToken($uid);
-
-        $this->userModel->update(['uid' => $uid], ['refreshToken' => $newRefreshToken]);
-
-        $response->getBody()->write(json_encode([
-          'activeToken' => $newActiveToken,
-          'refreshToken' => $newRefreshToken
-        ]));
-
-        return $response;
-      }
-    }
-
-    throw new InvalidRefreshTokenException();
+    $response->getBody()->write(json_encode($newTokens));
+    return $response;
   }
 }

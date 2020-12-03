@@ -2,7 +2,7 @@
 
 declare (strict_types=1);
 
-namespace AppExceptions\SignInExceptions;
+namespace Api\AppExceptions\SignInExceptions;
 
 class PasswordInvalidException extends SignInException
 {

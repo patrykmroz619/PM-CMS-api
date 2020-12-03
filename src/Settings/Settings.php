@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Settings;
+namespace Api\Settings;
 
 final class Settings {
   public static function getDbConfig() : array

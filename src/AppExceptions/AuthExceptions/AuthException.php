@@ -2,9 +2,9 @@
 
 declare (strict_types=1);
 
-namespace AppExceptions\AuthExceptions;
+namespace Api\AppExceptions\AuthExceptions;
 
-use AppExceptions\AppException;
+use Api\AppExceptions\AppException;
 
 class AuthException extends AppException
 {

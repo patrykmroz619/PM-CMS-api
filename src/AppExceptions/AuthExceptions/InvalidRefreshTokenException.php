@@ -2,7 +2,7 @@
 
 declare (strict_types=1);
 
-namespace AppExceptions\AuthExceptions;
+namespace Api\AppExceptions\AuthExceptions;
 
 class InvalidRefreshTokenException extends AuthException
 {

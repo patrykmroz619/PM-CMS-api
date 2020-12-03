@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Models;
+namespace Api\Models;
 
-use Database\DatabaseConnector;
 use MongoDB\Collection;
 use MongoDB\Database;
+use Api\Database\DatabaseConnector;
 
 abstract class AbstractModel {
   private Database $db;

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Database;
+namespace Api\Database;
 
 use Exception;
 use MongoDB\Client;
-use Settings\Settings;
+use Api\Settings\Settings;
 
 class DatabaseConnector {
   public static function connect() {

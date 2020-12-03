@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppExceptions\AuthExceptions;
+namespace Api\AppExceptions\AuthExceptions;
 
 class JWTWasNotPassedException extends AuthException {
   public function __construct()

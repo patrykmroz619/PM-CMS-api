@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-use Controllers\AuthController;
-use Controllers\MainController;
-use Controllers\UserController;
-use Middlewares\AuthMiddleware;
+namespace Api\App;
+
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
+use Api\Controllers\AuthController;
+use Api\Controllers\MainController;
+use Api\Controllers\UserController;
+use Api\Middlewares\AuthMiddleware;
 
 return function (App $app) {
   $app->post('/login', [AuthController::class, 'signIn']);

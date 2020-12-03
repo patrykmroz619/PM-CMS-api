@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Services;
+namespace Api\Services;
 
-use AppExceptions\AuthExceptions\JWTWasNotPassedException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Exception;
-use \Firebase\JWT\JWT;
-use Settings\Settings;
+use Firebase\JWT\JWT;
+use Api\AppExceptions\AuthExceptions\JWTWasNotPassedException;
+use Api\Settings\Settings;
 
 class TokenService {
 

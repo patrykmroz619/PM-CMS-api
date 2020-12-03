@@ -2,10 +2,9 @@
 
 declare (strict_types=1);
 
-namespace AppExceptions;
+namespace Api\AppExceptions;
 
 use Exception;
-use Throwable;
 
 class AppException extends Exception {
   protected string $type;

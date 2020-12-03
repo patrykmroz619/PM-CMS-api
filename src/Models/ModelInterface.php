@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Models;
+namespace Api\Models;
 
 use MongoDB\InsertOneResult;
 use MongoDB\Model\BSONDocument;

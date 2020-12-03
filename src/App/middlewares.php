@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
+namespace Api\App;
+
 use Slim\App;
-use Settings\Settings;
-use Helpers\ApiErrorHandler;
-use Middlewares\CorsMiddleware;
-use Middlewares\JSONBodyParserMiddleware;
-use Middlewares\SetContentTypeMiddleware;
+use Api\Settings\Settings;
+use Api\Helpers\ApiErrorHandler;
+use Api\Middlewares\CorsMiddleware;
+use Api\Middlewares\JSONBodyParserMiddleware;
+use Api\Middlewares\SetContentTypeMiddleware;
 
 return function (App $app) {
   $settings = Settings::getErrorMiddlewareConfig();

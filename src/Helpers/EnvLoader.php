@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Helpers;
+namespace Api\Helpers;
 
 use Dotenv\Dotenv;
 

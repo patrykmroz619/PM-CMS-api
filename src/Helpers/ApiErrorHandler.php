@@ -2,7 +2,7 @@
 
 declare (strict_types=1);
 
-namespace Helpers;
+namespace Api\Helpers;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
@@ -13,9 +13,9 @@ use Slim\Exception\HttpNotFoundException;
 use Slim\Exception\HttpNotImplementedException;
 use Slim\Exception\HttpUnauthorizedException;
 use Slim\Handlers\ErrorHandler;
-use AppExceptions\AppException;
 use Exception;
 use Throwable;
+use Api\AppExceptions\AppException;
 
 class ApiErrorHandler extends ErrorHandler {
   public const BAD_REQUEST = 'BAD_REQUEST';

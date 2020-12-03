@@ -2,113 +2,99 @@
 
 declare (strict_types=1);
 
-namespace Validators;
+namespace Api\Validators;
 
-use AppExceptions\SignInExceptions\PasswordInvalidException;
-use AppExceptions\SignInExceptions\UserNotFoundException;
-use AppExceptions\SignUpExceptions\EmailWasNotPassedException;
-use AppExceptions\SignUpExceptions\InvalidCompanyNameException;
-use AppExceptions\SignUpExceptions\InvalidEmailException;
-use AppExceptions\SignUpExceptions\InvalidNameException;
-use AppExceptions\SignUpExceptions\InvalidSurnameException;
-use AppExceptions\SignUpExceptions\PasswordWasNotPassedException;
-use AppExceptions\SignUpExceptions\UserAlreadyExistsException;
-use Models\UserModel;
-use MongoDB\Model\BSONDocument;
+use Api\AppExceptions\SignUpExceptions\EmailWasNotPassedException;
+use Api\AppExceptions\SignUpExceptions\InvalidCompanyNameException;
+use Api\AppExceptions\SignUpExceptions\InvalidEmailException;
+use Api\AppExceptions\SignUpExceptions\InvalidNameException;
+use Api\AppExceptions\SignUpExceptions\InvalidSurnameException;
+use Api\AppExceptions\SignUpExceptions\PasswordWasNotPassedException;
 
 class UserDataValidator {
-  private UserModel $userModel;
-  private array $userData = [];
-
-  public function signUpValidate(array $userData, UserModel $userModel): void
+  public function signUpValidate(array $userData): array
   {
-    $this->userData = $userData;
-    $this->userModel = $userModel;
-    $this->isDataValid(true);
+    $this->emailValidate($userData);
+    $this->passwordValidate($userData);
+    $this->nameAndSurnameValidate($userData);
+    $this->companyNameValidate($userData);
 
-    $user = $this->getUser();
-    if(!!$user)
-      throw new UserAlreadyExistsException();
+    $correctData = [
+      'email' => $userData['email'],
+      'password' => $userData['password'],
+      'name' => $userData['name'] ?? null,
+      'surname' => $userData['surname'] ?? null,
+      'company' => $userData['company'] ?? null
+    ];
+
+    return $correctData;
   }
 
-  public function signInValidate(array $userData, UserModel $userModel): BSONDocument
+  public function signInValidate(array $userData): array
   {
-    $this->userData = $userData;
-    $this->userModel = $userModel;
-    $this->isDataValid();
+    $this->emailValidate($userData);
+    $this->passwordValidate($userData);
 
-    $user = $this->getUser();
-    if(!$user)
-      throw new UserNotFoundException();
+    $correctData = [
+      'email' => $userData['email'],
+      'password' => $userData['password']
+    ];
 
-    $isPasswordValid = password_verify($this->userData['password'], $user['password']);
-    if (!$isPasswordValid)
-      throw new PasswordInvalidException();
-
-    return $user;
+    return $correctData;
   }
 
-  private function getUser(): ?BSONDocument
+  private function emailValidate(array $userData): bool
   {
-    $filter = ['email' => $this->userData['email']];
-    return $this->userModel->findOne($filter);
-  }
-
-  private function isDataValid(bool $register = false): void
-  {
-    $this->emailValidate();
-    $this->passwordValidate();
-
-    if($register){
-      $this->nameAndSurnameValidate();
-      $this->companyNameValidate();
-    }
-  }
-
-  private function emailValidate(): void
-  {
-    if(!isset($this->userData['email']))
+    if(!isset($userData['email']))
       throw new EmailWasNotPassedException();
 
     $pattern = "/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i";
     if (
-      !preg_match($pattern, $this->userData['email'])
-      && strlen($this->userData['email'])  > 35
+      !preg_match($pattern, $userData['email'])
+      && strlen($userData['email'])  > 35
     )
       throw new InvalidEmailException();
+
+    return true;
   }
 
-  private function passwordValidate(): void
+  private function passwordValidate(array $userData): bool
   {
-    if(!isset($this->userData['password']))
+    if(!isset($userData['password']))
       throw new PasswordWasNotPassedException();
+
+    return true;
   }
 
-  private function nameAndSurnameValidate(): void
+  private function nameAndSurnameValidate(array $userData): bool
   {
     $pattern = "/^[a-zA-Z][a-zA-Z-']{2,33}$/";
 
     if (
-      isset($this->userData['name'])
-      && !preg_match($pattern, $this->userData['name'])
-      && strlen($this->userData['name']) > 35
+      isset($userData['name'])
+      && !preg_match($pattern, $userData['name'])
+      && strlen($userData['name']) > 35
     )
       throw new InvalidNameException();
 
     if (
-      isset($this->userData['surname'])
-      && !preg_match($pattern, $this->userData['surname'])
-      && strlen($this->userData['surname']) > 35
+      isset($userData['surname'])
+      && !preg_match($pattern, $userData['surname'])
+      && strlen($userData['surname']) > 35
     )
       throw new InvalidSurnameException();
+
+    return true;
   }
 
-  private function companyNameValidate(): void
+  private function companyNameValidate(array $userData): bool
   {
     if (
-      isset($this->userData['company'])
-      && strlen($this->userData['company']) > 35
+      isset($userData['company'])
+      && strlen($userData['company']) > 35
     )
       throw new InvalidCompanyNameException();
+
+    return true;
   }
 }

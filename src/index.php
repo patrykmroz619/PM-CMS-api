@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Helpers\EnvLoader;
+namespace Api;
 
-require __DIR__ . '/../vendor/autoload.php';
+use Api\Helpers\EnvLoader;
 
 EnvLoader::load();
 
-include_once "./app/api.php";
+include_once 'App/api.php';
 
 

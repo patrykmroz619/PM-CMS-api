@@ -2,9 +2,9 @@
 
 declare (strict_types=1);
 
-namespace AppExceptions\SignInExceptions;
+namespace Api\AppExceptions\SignInExceptions;
 
-use AppExceptions\AppException;
+use Api\AppExceptions\AppException;
 
 class SignInException extends AppException
 {

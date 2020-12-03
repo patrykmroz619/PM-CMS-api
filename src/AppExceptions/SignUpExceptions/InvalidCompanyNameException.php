@@ -2,7 +2,7 @@
 
 declare (strict_types=1);
 
-namespace AppExceptions\SignUpExceptions;
+namespace Api\AppExceptions\SignUpExceptions;
 
 class InvalidCompanyNameException extends SignUpException
 {

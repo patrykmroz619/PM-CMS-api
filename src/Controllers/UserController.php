@@ -2,36 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Controllers;
+namespace Api\Controllers;
 
-use Models\UserModel;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Services\TokenService;
+use Api\Services\UserService;
+use Api\Services\TokenService;
 
 class UserController {
-  private UserModel $userModel;
+  private UserService $userService;
 
-  public function __construct(UserModel $userModel)
+  public function __construct(UserService $userService)
   {
-    $this->userModel = $userModel;
+    $this->userService = $userService;
   }
 
   public function getActiveUser(Request $request, Response $response): Response
   {
     $token = TokenService::getTokenFromRequest($request);
-    $arrayToken = (array) TokenService::validateToken($token);
 
-    $uid = $arrayToken['uid'];
-    $user = $this->userModel->findOne(['uid' => $uid]);
-
-    $responseData = [
-      'uid' => $user['uid'],
-      'email' => $user['email'],
-      'name' => $user['name'] ?? null,
-      'surname' => $user['surname'] ?? null,
-      'company' => $user['company'] ?? null
-    ];
+    $responseData = $this->userService->getUserWithUidFromToken($token);
 
     $response->getBody()->write(json_encode($responseData));
     return $response;

@@ -4,7 +4,7 @@
   "type": "project",
   "autoload": {
     "psr-4": {
-      "": "src/"
+      "Api\\": "src/"
     }
   },
   "require": {
@@ -16,5 +16,11 @@
     "mongodb/mongodb": "^1.7",
     "lcobucci/jwt": "^3.3",
     "firebase/php-jwt": "^5.2"
+  },
+  "scripts": {
+    "run-api": "php -S localhost:8000"
+  },
+  "config": {
+    "process-timeout": 0
   }
 }

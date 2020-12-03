@@ -2,9 +2,9 @@
 
 declare (strict_types=1);
 
-namespace AppExceptions\SignUpExceptions;
+namespace Api\AppExceptions\SignUpExceptions;
 
-use AppExceptions\AppException;
+use Api\AppExceptions\AppException;
 
 class SignUpException extends AppException {
   public function __construct(string $message)
