@@ -47,6 +47,11 @@ class TokenService {
     return $token;
   }
 
+  // public static function getUserIdFromRequest(Request $request): string
+  // {
+  //   $token = self::getTokenFromRequest($request);
+  // }
+
   private static function generateToken(string $uid, $active): string
   {
     $config = self::getConfig();

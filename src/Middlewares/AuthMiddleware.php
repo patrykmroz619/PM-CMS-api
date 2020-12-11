@@ -15,11 +15,18 @@ class AuthMiddleware {
   {
     $token = TokenService::getTokenFromRequest($request);
 
-    $arrayToken = (array) TokenService::validateToken($token);
+    $tokenArray = (array) TokenService::validateToken($token);
 
-    if(!empty($arrayToken) && $arrayToken['active'])
-      return $handler->handle($request);
+    if(!empty($tokenArray) && $tokenArray['active'])
+      return $handler->handle($this->applyUserIdFromTokenToParsedBody($request, $tokenArray));
     else
       throw new InvalidActiveTokenException();
+  }
+
+  private function applyUserIdFromTokenToParsedBody(Request $request, array $tokenArray): Request
+  {
+    $parsedBody = $request->getParsedBody();
+    $bodyWithUid = array_merge($parsedBody ?? [], ['uid' => $tokenArray['uid']]);
+    return $request->withParsedBody($bodyWithUid);
   }
 }

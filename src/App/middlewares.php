@@ -23,6 +23,8 @@ return function (App $app) {
     $settings['logErrorDetails']
   );
 
-  $errorHandler = new ApiErrorHandler($app->getCallableResolver(), $app->getResponseFactory());
-  $errorMiddleware->setDefaultErrorHandler($errorHandler);
+  if($_ENV['MODE'] === 'PRODUCTION') {
+    $errorHandler = new ApiErrorHandler($app->getCallableResolver(), $app->getResponseFactory());
+    $errorMiddleware->setDefaultErrorHandler($errorHandler);
+  }
 };

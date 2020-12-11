@@ -14,7 +14,7 @@ interface ModelInterface
 
   public function findOne(array $filter): ?BSONDocument;
 
-  public function findMany(array $filter): ?array;
+  public function findMany(array $filter, array $options = []): array;
 
   public function update(array $filter, array $data): UpdateResult;
 }

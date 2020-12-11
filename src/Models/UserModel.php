@@ -11,6 +11,17 @@ use MongoDB\UpdateResult;
 
 class UserModel extends AbstractModel implements ModelInterface {
   private const USER_COLLECTION_NAME = "users";
+  public function addProjectId(array $filter, string $projectId): UpdateResult
+  {
+    return $this->getUserCollection()->updateOne($filter, ['$push' => ['projects' => $projectId]]);
+  }
+
+  public function getProjectIDs(string $uid): array
+  {
+    $result = $this->findOne(['uid' => $uid]);
+    $resultArray = (array) $result['projects'];
+    return $resultArray ?? [];
+  }
 
   public function insertOne(array $data): InsertOneResult
   {
@@ -22,7 +33,7 @@ class UserModel extends AbstractModel implements ModelInterface {
     return $this->getUserCollection()->findOne($filter);
   }
 
-  public function findMany(array $filter): ?array
+  public function findMany(array $filter, array $options = []): array
   {
     return [];
   }

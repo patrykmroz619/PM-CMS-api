@@ -10,7 +10,6 @@ use Api\Database\DatabaseConnector;
 
 abstract class AbstractModel {
   private Database $db;
-  private Collection $collection;
 
   public function __construct()
   {

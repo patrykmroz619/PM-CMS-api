@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Factory\ResponseFactory;
+use Api\Settings\Settings;
 
 class CorsMiddleware {
   public function __invoke(Request $request, RequestHandler $handler): Response
@@ -20,7 +21,9 @@ class CorsMiddleware {
       $response->withStatus(200);
     }
 
-    return $response->withHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+    $urls = Settings::getAppsUrl();
+
+    return $response->withHeader('Access-Control-Allow-Origin', $urls['client'])
     ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
     ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   }

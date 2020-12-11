@@ -9,11 +9,11 @@ use Exception;
 class AppException extends Exception {
   protected string $type;
 
-  public function __construct(string $message, int $statusCode)
+  public function __construct(string $message, int $statusCode, string $type = 'APP_ERROR')
   {
     $this->message = $message;
     $this->code = $statusCode;
-    $this->type = 'APP_ERROR';
+    $this->type = $type;
   }
 
   public function getType(): string

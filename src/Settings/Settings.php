@@ -34,7 +34,7 @@ final class Settings {
   {
     return [
       'jti' => $_ENV['JWT_JTI_CLAIM'],
-      'access_exp' => 60,
+      'access_exp' => 6000,
       'refresh_exp' => 3600,
       'leeway' => 5,
       'hmacKey' => $_ENV['JWT_HMAC_KEY']
