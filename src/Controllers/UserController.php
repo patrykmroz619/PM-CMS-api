@@ -6,21 +6,21 @@ namespace Api\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Api\Models\UserModel;
+use Api\Services\UserService;
 
 class UserController {
-  private UserModel $userModel;
+  private UserService $userService;
 
-  public function __construct(UserModel $userModel)
+  public function __construct(UserService $userService)
   {
-    $this->userModel = $userModel;
+    $this->userService = $userService;
   }
 
   public function getActiveUser(Request $request, Response $response): Response
   {
     $body = $request->getParsedBody();
 
-    $user = $this->userModel->findOne(['uid' => $body['uid']]);
+    $user = $this->userService->getUser($body['uid']);
 
     $userData = [
       'uid' => $user['uid'],
@@ -32,5 +32,23 @@ class UserController {
 
     $response->getBody()->write(json_encode($userData));
     return $response;
+  }
+
+  public function updateUserData(Request $request, Response $response): Response
+  {
+    $body = $request->getParsedBody();
+
+    $updatedUser = $this->userService->updateUserData($body);
+
+    $response->getBody()->write(json_encode($updatedUser));
+    return $response;
+  }
+
+  public function deleteUser(Request $request, Response $response): Response
+  {
+    $body = $request->getParsedBody();
+
+    $this->userService->deleteUser($body['uid']);
+    return $response->withStatus(204);
   }
 }

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Api\Models;
 
+use Api\AppExceptions\ProjectExceptions\ProjectNotFoundException;
 use MongoDB\Collection;
 use MongoDB\InsertOneResult;
 use MongoDB\Model\BSONDocument;
 use MongoDB\UpdateResult;
 use MongoDB\BSON\ObjectId;
 use Api\Models\AbstractModel;
+use Exception;
 use MongoDB\DeleteResult;
 
 class ProjectModel extends AbstractModel implements ModelInterface {
@@ -27,8 +29,14 @@ class ProjectModel extends AbstractModel implements ModelInterface {
 
   public function findOneById(string $id): array
   {
-    $result = (array) $this->findOne(['_id' => new ObjectId($id)]);
-    return $this->convertObjectIdOnString($result);
+    try
+    {
+      $result = (array) $this->findOne(['_id' => new ObjectId($id)]);
+    } catch (Exception $e)
+    {
+      throw new ProjectNotFoundException();
+    }
+    return empty($result) ? [] : $this->convertObjectIdOnString($result);
   }
 
   public function findManyByUserId(string $uid): array
@@ -38,12 +46,29 @@ class ProjectModel extends AbstractModel implements ModelInterface {
 
   public function updateById(string $id, array $data): array
   {
+    try
+    {
     return (array) $this->update(['_id' => new ObjectId($id)], $data);
+    } catch (Exception $e)
+    {
+      throw new ProjectNotFoundException();
+    }
   }
 
   public function deleteOne(string $id): DeleteResult
   {
+    try
+    {
     return $this->getProjectsCollection()->deleteOne(['_id' => new ObjectId($id)]);
+    } catch (Exception $e)
+    {
+      throw new ProjectNotFoundException();
+    }
+  }
+
+  public function deleteManyByUserId(string $uid): DeleteResult
+  {
+    return $this->getProjectsCollection()->deleteMany(['userId' => $uid]);
   }
 
   public function findOne(array $filter): ?BSONDocument

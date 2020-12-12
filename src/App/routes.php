@@ -19,7 +19,9 @@ return function (App $app) {
 
   $app->group('', function (RouteCollectorProxy $group) {
     $group->get('/', [MainController::class, 'hello']);
-    $group->get('/me', [UserController::class, 'getActiveUser']);
+    $group->get('/users', [UserController::class, 'getActiveUser']);
+    $group->put('/users', [UserController::class, 'updateUserData']);
+    $group->delete('/users', [UserController::class, 'deleteUser']);
 
     $group->get('/projects', [ProjectController::class, 'getProjects']);
     $group->post('/projects', [ProjectController::class, 'addProject']);

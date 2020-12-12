@@ -36,12 +36,12 @@ class AuthService {
       ['refreshToken' => $refreshToken]
     );
 
-    return $this->createResponse($user, $activeToken, $refreshToken);
+    return $this->createResponse((array) $user, $activeToken, $refreshToken);
   }
 
   public function signUp(array $signUpData): array
   {
-    $userData = $this->userDataValidator->signUpValidate($signUpData);
+    $userData = $this->validator->signUpValidate($signUpData);
 
     $isUserExist = $this->checkThatUserExist($userData);
     if($isUserExist) throw new UserAlreadyExistsException();
@@ -62,7 +62,7 @@ class AuthService {
     $activeToken = TokenService::getActiveToken($uid);
     $refreshToken = TokenService::getRefreshToken($uid);
 
-    return $this->createResponse($userData, $activeToken, $refreshToken);
+    return $this->createResponse($dataToSave, $activeToken, $refreshToken);
   }
 
   public function refreshToken(string $token): array
@@ -98,12 +98,12 @@ class AuthService {
     return !!$user;
   }
 
-  private function getUser($userData): BSONDocument
+  private function getUser($userData): ?BSONDocument
   {
     return $this->userModel->findOne(['email' => $userData['email']]);
   }
 
-  private function createResponse(BSONDocument $user, string $activeToken, string $refreshToken): array
+  private function createResponse(array $user, string $activeToken, string $refreshToken): array
   {
     return [
       'userData' => [

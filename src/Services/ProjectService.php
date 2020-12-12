@@ -6,6 +6,8 @@ namespace Api\Services;
 
 use Api\AppExceptions\ProjectExceptions\ProjectAlreadyExistsException;
 use Api\AppExceptions\ProjectExceptions\ProjectNotFoundException;
+use Api\AppExceptions\ProjectExceptions\EndpointIsNotUniqueException;
+use Api\AppExceptions\ProjectExceptions\ProjectNameIsNotUniqueException;
 use Api\Models\ProjectModel;
 use Api\Models\UserModel;
 use Api\Validators\ProjectDataValidator;
@@ -13,7 +15,6 @@ use Api\Validators\ProjectDataValidator;
 class ProjectService {
   private ProjectModel $projectModel;
   private ProjectDataValidator $projectDataValidator;
-  private UserModel $userModel;
 
   public function __construct()
   {
@@ -31,10 +32,6 @@ class ProjectService {
     $newProjectId = $result->getInsertedId()->__toString();
     $projectData['id'] = $newProjectId;
 
-    $userFilter = ['uid' => $projectData['userId']];
-
-    $this->userModel->addProjectId($userFilter, $newProjectId);
-
     return $projectData;
   }
 
@@ -42,7 +39,7 @@ class ProjectService {
   {
     $project = $this->projectModel->findOneById($id);
 
-    if(!$project)
+    if(empty($project))
       throw new ProjectNotFoundException();
 
     return (array) $project;
@@ -60,8 +57,20 @@ class ProjectService {
     $updateData = $this->projectDataValidator->updateValidate($data);
     $updateData['updatedAt'] = time();
 
+    if(isset($updateData['name'])) {
+      $this->checkThatProjectNameIsUnique($data['uid'], $updateData['name'], $id);
+    }
+
+    if(isset($updateData['endpoint'])) {
+      $this->checkThatEndpointIsUnique($data['uid'], $updateData['endpoint'], $id);
+    }
+
     $this->projectModel->updateById($id, $updateData);
     $updatedProject = $this->projectModel->findOneById($id);
+
+    if(empty($updatedProject))
+      throw new ProjectNotFoundException();
+
     return $updatedProject;
   }
 
@@ -96,7 +105,44 @@ class ProjectService {
     if(!!$project)
       throw new ProjectAlreadyExistsException();
 
+    $this->checkThatEndpointIsUnique($projectData['userId'], $projectData['endpoint']);
+
     return $projectData;
+  }
+
+  private function checkThatProjectNameIsUnique( string $userId, string $name, string $id): bool
+  {
+    $result = $this->projectModel->findMany(
+      ['userId' => $userId, 'name' => $name]
+    );
+
+    foreach($result as $project)
+    {
+      if($project['name'] === $name && $project['id'] != $id)
+        throw new ProjectNameIsNotUniqueException();
+    }
+
+    return true;
+  }
+
+  private function checkThatEndpointIsUnique( string $userId, string $endpoint, string $id = null): bool
+  {
+    $result = $this->projectModel->findMany(
+      ['userId' => $userId, 'endpoint' => $endpoint]
+    );
+
+    foreach($result as $project)
+    {
+      if($id) {
+        if($project['endpoint'] === $endpoint && $project['id'] != $id)
+          throw new EndpointIsNotUniqueException();
+      } else {
+        if($project['endpoint'] === $endpoint)
+          throw new EndpointIsNotUniqueException();
+      }
+    }
+
+    return true;
   }
 
   private function createSlug(string $text): string
