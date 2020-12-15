@@ -6,7 +6,6 @@ namespace Api\Services;
 
 use Api\AppExceptions\ProjectExceptions\ProjectAlreadyExistsException;
 use Api\AppExceptions\ProjectExceptions\ProjectNotFoundException;
-use Api\AppExceptions\ProjectExceptions\EndpointIsNotUniqueException;
 use Api\AppExceptions\ProjectExceptions\ProjectNameIsNotUniqueException;
 use Api\Models\ProjectModel;
 use Api\Models\UserModel;
@@ -61,10 +60,6 @@ class ProjectService {
       $this->checkThatProjectNameIsUnique($data['uid'], $updateData['name'], $id);
     }
 
-    if(isset($updateData['endpoint'])) {
-      $this->checkThatEndpointIsUnique($data['uid'], $updateData['endpoint'], $id);
-    }
-
     $this->projectModel->updateById($id, $updateData);
     $updatedProject = $this->projectModel->findOneById($id);
 
@@ -85,10 +80,6 @@ class ProjectService {
   {
     $projectData = $this->validate($data);
 
-    if($projectData['endpoint'] === null) {
-      $projectData['endpoint'] = $this->createSlug($projectData['name']);
-    }
-
     $currentTime = time();
     $projectData['createdAt'] = $currentTime;
     $projectData['updatedAt'] = $currentTime;
@@ -102,10 +93,9 @@ class ProjectService {
     $projectData = $this->projectDataValidator->validate($data);
 
     $project = $this->projectModel->findOneByUidAndName($projectData['userId'], $projectData['name']);
+
     if(!!$project)
       throw new ProjectAlreadyExistsException();
-
-    $this->checkThatEndpointIsUnique($projectData['userId'], $projectData['endpoint']);
 
     return $projectData;
   }
@@ -123,33 +113,5 @@ class ProjectService {
     }
 
     return true;
-  }
-
-  private function checkThatEndpointIsUnique( string $userId, string $endpoint, string $id = null): bool
-  {
-    $result = $this->projectModel->findMany(
-      ['userId' => $userId, 'endpoint' => $endpoint]
-    );
-
-    foreach($result as $project)
-    {
-      if($id) {
-        if($project['endpoint'] === $endpoint && $project['id'] != $id)
-          throw new EndpointIsNotUniqueException();
-      } else {
-        if($project['endpoint'] === $endpoint)
-          throw new EndpointIsNotUniqueException();
-      }
-    }
-
-    return true;
-  }
-
-  private function createSlug(string $text): string
-  {
-    $pattern = '/[^A-Za-z0-9-]+/';
-
-    $slug = preg_replace($pattern, '-', $text);
-    return $slug;
   }
 }

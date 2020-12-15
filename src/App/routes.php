@@ -7,6 +7,7 @@ namespace Api\App;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 use Api\Controllers\AuthController;
+use Api\Controllers\ContentModelController;
 use Api\Controllers\MainController;
 use Api\Controllers\UserController;
 use Api\Controllers\ProjectController;
@@ -28,5 +29,7 @@ return function (App $app) {
     $group->get('/projects/{id}', [ProjectController::class, 'getProjectById']);
     $group->put('/projects/{id}', [ProjectController::class, 'updateProject']);
     $group->delete('/projects/{id}', [ProjectController::class, 'deleteProject']);
+
+    $group->post('/content-models/{projectId}', [ContentModelController::class, 'createContentModel']);
   })->add(new AuthMiddleware());
 };

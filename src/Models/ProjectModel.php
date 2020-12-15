@@ -100,11 +100,4 @@ class ProjectModel extends AbstractModel implements ModelInterface {
   {
     return $this->getCollection(self::PROJECTS_COLLECTION_NAME);
   }
-
-  private function convertObjectIdOnString(array $item): array
-  {
-    $item['id'] = ((array)$item['_id'])['oid']; // getting id as string from mongo object id.
-    unset($item['_id']);
-    return $item;
-  }
 }

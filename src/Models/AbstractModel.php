@@ -26,4 +26,11 @@ abstract class AbstractModel {
     $collection = $this->db->selectCollection($collectionName);
     return $collection;
   }
+
+  protected function convertObjectIdOnString(array $item): array
+  {
+    $item['id'] = ((array)$item['_id'])['oid']; // getting id as string from mongo object id.
+    unset($item['_id']);
+    return $item;
+  }
 }
