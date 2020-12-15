@@ -40,7 +40,9 @@ class ProjectController {
 
   public function getProjectById (Request $request, Response $response, string $id): Response
   {
-    $project = $this->projectService->getOneProject($id);
+    $body = $request->getParsedBody();
+
+    $project = $this->projectService->getOneProject($id, $body['uid']);
 
     $response->getBody()->write(json_encode($project));
     return $response;
@@ -57,7 +59,9 @@ class ProjectController {
 
   public function deleteProject (Request $request, Response $response, string $id): Response
   {
-    $this->projectService->deleteProject($id);
+    $body = $request->getParsedBody();
+
+    $this->projectService->deleteProject($id, $body['uid']);
 
     $response->getBody()->write(json_encode([]));
     return $response->withStatus(204);

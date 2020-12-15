@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Api\Models;
 
+use Api\AppExceptions\ContentModelExceptions\ContentModelNotFound;
+use Exception;
+use MongoDB\BSON\ObjectId;
 use MongoDB\Collection;
+use MongoDB\DeleteResult;
 use MongoDB\InsertOneResult;
 use MongoDB\Model\BSONDocument;
+use MongoDB\UpdateResult;
 
 class ContentModel extends AbstractModel
 {
@@ -21,9 +26,41 @@ class ContentModel extends AbstractModel
     }
     return null;
   }
+
+  public function findOneById(string $id): ?array
+  {
+    $result = $this->findOne(['_id' => new ObjectId($id)]);
+
+    if($result) {
+      return $this->convertObjectIdOnString((array) $result);
+    }
+    return null;
+  }
+
+  public function findManyByProjectId(string $projectId): array
+  {
+    return $this->findMany(['projectId' => $projectId]);
+  }
+
   public function insertOne(array $data): InsertOneResult
   {
     return $this->getContentModelCollection()->insertOne($data);
+  }
+
+  public function updateById(string $id, array $data): UpdateResult
+  {
+    $filter = ['_id' => new ObjectId($id)];
+    try {
+      return $this->getContentModelCollection()->updateOne($filter, ['$set' => $data]);
+    } catch (Exception $e)
+    {
+      return null;
+    }
+  }
+
+  public function deleteById(string $id): DeleteResult
+  {
+    return $this->getContentModelCollection()->deleteOne(['_id' => new ObjectId($id)]);
   }
 
   public function findMany(array $filter, array $options = []): array

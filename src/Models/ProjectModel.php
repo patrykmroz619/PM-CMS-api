@@ -44,6 +44,11 @@ class ProjectModel extends AbstractModel implements ModelInterface {
     return $this->findMany(['userId' => $uid]);
   }
 
+  public function updateTimestamp(string $id): array
+  {
+    return $this->updateById($id, ['updatedAt' => time()]);
+  }
+
   public function updateById(string $id, array $data): array
   {
     try

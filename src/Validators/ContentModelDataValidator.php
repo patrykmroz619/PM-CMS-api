@@ -24,6 +24,22 @@ class ContentModelDataValidator
     return $correctData;
   }
 
+  public function validateToUpdate(array $data): array
+  {
+    $correctData = [];
+    if(isset($data['name'])) {
+      $this->validateName($data);
+      $correctData['name'] = $data['name'];
+    }
+
+    if(isset($data['endpoint'])) {
+      $this->validateEndpoint($data);
+      $correctData['endpoint'] = $data['endpoint'];
+    }
+
+    return $correctData;
+  }
+
   private function validateName(array $data): bool
   {
     if(!isset($data['name'])) {

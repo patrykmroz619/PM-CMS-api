@@ -29,4 +29,34 @@ class ContentModelController
     $response->getBody()->write(json_encode($newContentModel));
     return $response->withStatus(201);
   }
+
+  public function getContentModels(Request $request, Response $response, string $projectId): Response
+  {
+    $body = $request->getParsedBody();
+
+    $contentModels = $this->contentModelService->getContentModels($projectId, $body['uid']);
+
+    $response->getBody()->write(json_encode($contentModels));
+    return $response;
+  }
+
+  public function updateContentModel(Request $request, Response $response, string $contentModelId): Response
+  {
+    $body = $request->getParsedBody();
+
+    $updatedModel = $this->contentModelService->updateContentModel($contentModelId, $body);
+
+    $response->getBody()->write(json_encode($updatedModel));
+    return $response;
+  }
+
+  public function deleteContentModel(Request $request, Response $response, string $contentModelId): Response
+  {
+    $body = $request->getParsedBody();
+
+    $this->contentModelService->delete($contentModelId, $body['uid']);
+
+    $response->getBody()->write(json_encode([]));
+    return $response->withStatus(204);
+  }
 }

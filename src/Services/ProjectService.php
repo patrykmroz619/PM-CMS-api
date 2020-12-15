@@ -14,12 +14,14 @@ use Api\Validators\ProjectDataValidator;
 class ProjectService {
   private ProjectModel $projectModel;
   private ProjectDataValidator $projectDataValidator;
+  private SecurityService $securityService;
 
   public function __construct()
   {
     $this->projectModel = new ProjectModel();
     $this->userModel = new UserModel();
     $this->projectDataValidator = new ProjectDataValidator();
+    $this->securityService = new SecurityService();
   }
 
   public function addProject($data)
@@ -34,11 +36,11 @@ class ProjectService {
     return $projectData;
   }
 
-  public function getOneProject(string $id): array
+  public function getOneProject(string $id, string $userId): array
   {
     $project = $this->projectModel->findOneById($id);
 
-    if(empty($project))
+    if($project['userId'] != $userId)
       throw new ProjectNotFoundException();
 
     return (array) $project;
@@ -53,6 +55,8 @@ class ProjectService {
 
   public function updateProject(string $id, array $data): array
   {
+    $this->securityService->checkThatProjectBelongToUser($id, $data['uid'], $this->projectModel);
+
     $updateData = $this->projectDataValidator->updateValidate($data);
     $updateData['updatedAt'] = time();
 
@@ -69,8 +73,10 @@ class ProjectService {
     return $updatedProject;
   }
 
-  public function deleteProject(string $id): void
+  public function deleteProject(string $id, string $userId): void
   {
+    $this->securityService->checkThatProjectBelongToUser($id, $userId, $this->projectModel);
+
     $result = $this->projectModel->deleteOne($id);
     if($result->getDeletedCount() == 0)
       throw new ProjectNotFoundException();

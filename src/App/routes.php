@@ -30,6 +30,9 @@ return function (App $app) {
     $group->put('/projects/{id}', [ProjectController::class, 'updateProject']);
     $group->delete('/projects/{id}', [ProjectController::class, 'deleteProject']);
 
+    $group->get('/content-models/{projectId}', [ContentModelController::class, 'getContentModels']);
     $group->post('/content-models/{projectId}', [ContentModelController::class, 'createContentModel']);
+    $group->put('/content-models/{contentModelId}', [ContentModelController::class, 'updateContentModel']);
+    $group->delete('/content-models/{contentModelId}', [ContentModelController::class, 'deleteContentModel']);
   })->add(new AuthMiddleware());
 };

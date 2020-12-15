@@ -5,20 +5,26 @@ declare(strict_types=1);
 namespace Api\Services;
 
 use Api\AppExceptions\ContentModelExceptions\ContentModelAlreadyExistsException;
+use Api\AppExceptions\ContentModelExceptions\ContentModelNameIsNotUnique;
+use Api\AppExceptions\ContentModelExceptions\ContentModelNotFound;
 use Api\AppExceptions\ContentModelExceptions\EndpointIsNotUniqueException;
 use Api\Models\ContentModel;
+use Api\Models\ProjectModel;
 use Api\Validators\ContentModelDataValidator;
 
 class ContentModelService
 {
   private ContentModelDataValidator $contentModelDataValidator;
   private ContentModel $contentModel;
+  private SecurityService $securityService;
 
   public function __construct()
   {
     $this->contentModelDataValidator = new ContentModelDataValidator();
     $this->contentModel = new ContentModel();
+    $this->securityService = new SecurityService();
   }
+
   public function create(array $requestData): array
   {
     $dataToSave = $this->processNewContentModelData($requestData);
@@ -27,6 +33,36 @@ class ContentModelService
     $dataToSave['id'] = $result->getInsertedId()->__toString();
 
     return $dataToSave;
+  }
+
+  public function getContentModels(string $projectId, string $userId): array
+  {
+    $this->securityService->checkThatProjectBelongToUser($projectId, $userId, new ProjectModel());
+
+    $result = $this->contentModel->findManyByProjectId($projectId);
+
+    return $result;
+  }
+
+  public function updateContentModel(string $id, array $data): array
+  {
+    $dataToUpdate = $this->validateUpdateContentModel($id, $data['uid'], $data);
+
+    $this->contentModel->updateById($id, $dataToUpdate);
+
+    $updatedModel = $this->contentModel->findOneById($id);
+
+    return $updatedModel;
+  }
+
+  public function delete(string $id, string $userId): void
+  {
+    $this->securityService->checkThatContentModelBelongToUser($id, $userId, $this->contentModel);
+
+    $result = $this->contentModel->deleteById($id);
+
+    if($result->getDeletedCount() == 0)
+      throw new ContentModelNotFound();
   }
 
   private function processNewContentModelData(array $data): array
@@ -53,27 +89,42 @@ class ContentModelService
     if(!!$contentModel)
       throw new ContentModelAlreadyExistsException();
 
-    $this->checkThatEndpointIsUnique($data['projectId'], $contentModelData['endpoint']);
+    $this->checkThatContentModelEndpointIsUnique($data['projectId'], $contentModelData['endpoint']);
 
     return $contentModelData;
   }
 
-  // private function checkThatProjectNameIsUnique( string $userId, string $name, string $id): bool
-  // {
-  //   $result = $this->projectModel->findMany(
-  //     ['userId' => $userId, 'name' => $name]
-  //   );
+  private function validateUpdateContentModel(string $id, string $userId, array $data): array
+  {
+    $this->securityService->checkThatContentModelBelongToUser($id, $userId, $this->contentModel);
 
-  //   foreach($result as $project)
-  //   {
-  //     if($project['name'] === $name && $project['id'] != $id)
-  //       throw new ProjectNameIsNotUniqueException();
-  //   }
+    $dataToUpdate = $this->contentModelDataValidator->validateToUpdate($data);
 
-  //   return true;
-  // }
+    if(isset($dataToUpdate['name']))
+      $this->checkThatContentModelNameIsUnique($userId, $dataToUpdate['name'], $id);
 
-  private function checkThatEndpointIsUnique( string $userId, string $endpoint, string $id = null): bool
+    if(isset($dataToUpdate['endpoint']))
+      $this->checkThatContentModelEndpointIsUnique($userId, $dataToUpdate['endpoint'], $id);
+
+    return $dataToUpdate;
+  }
+
+  private function checkThatContentModelNameIsUnique( string $userId, string $name, string $id): bool
+  {
+    $result = $this->contentModel->findMany(
+      ['userId' => $userId, 'name' => $name]
+    );
+
+    foreach($result as $project)
+    {
+      if($project['name'] === $name && $project['id'] != $id)
+        throw new ContentModelNameIsNotUnique();
+    }
+
+    return true;
+  }
+
+  private function checkThatContentModelEndpointIsUnique( string $userId, string $endpoint, string $id = null): bool
   {
     $result = $this->contentModel->findMany(
       ['projectId' => $userId, 'endpoint' => $endpoint]
