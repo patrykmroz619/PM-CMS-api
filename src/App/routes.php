@@ -8,6 +8,7 @@ use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 use Api\Controllers\AuthController;
 use Api\Controllers\ContentModelController;
+use Api\Controllers\ContentFieldController;
 use Api\Controllers\MainController;
 use Api\Controllers\UserController;
 use Api\Controllers\ProjectController;
@@ -34,5 +35,8 @@ return function (App $app) {
     $group->post('/content-models/{projectId}', [ContentModelController::class, 'createContentModel']);
     $group->put('/content-models/{contentModelId}', [ContentModelController::class, 'updateContentModel']);
     $group->delete('/content-models/{contentModelId}', [ContentModelController::class, 'deleteContentModel']);
+
+    $group->post('/content-model-fields/{contentModelId}', [ContentFieldController::class, 'addField']);
+    $group->delete('/content-model-fields/{contentModelId}', [ContentFieldController::class, 'deleteField']);
   })->add(new AuthMiddleware());
 };

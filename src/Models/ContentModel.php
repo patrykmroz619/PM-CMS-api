@@ -27,6 +27,25 @@ class ContentModel extends AbstractModel
     return null;
   }
 
+  public function getFields(string $id): array
+  {
+    $result = $this->findOneById($id);
+
+    return (array) $result['fields'];
+  }
+
+  public function addField(string $id, array $data): UpdateResult
+  {
+    $filter = ['_id' => new ObjectId($id)];
+    return $this->updateOne($filter, ['$push' => ['fields' => $data]]);
+  }
+
+  public function deleteField(string $id, string $fieldName): UpdateResult
+  {
+    $filter = ['_id' => new ObjectId($id)];
+    return $this->updateOne($filter, ['$pull' => ['fields' => ['name' => $fieldName]]]);
+  }
+
   public function findOneById(string $id): ?array
   {
     $result = $this->findOne(['_id' => new ObjectId($id)]);
@@ -50,12 +69,8 @@ class ContentModel extends AbstractModel
   public function updateById(string $id, array $data): UpdateResult
   {
     $filter = ['_id' => new ObjectId($id)];
-    try {
-      return $this->getContentModelCollection()->updateOne($filter, ['$set' => $data]);
-    } catch (Exception $e)
-    {
-      return null;
-    }
+
+    return $this->updateOne($filter, ['$set' => $data]);
   }
 
   public function deleteById(string $id): DeleteResult
@@ -76,6 +91,16 @@ class ContentModel extends AbstractModel
     }
 
     return $result;
+  }
+
+  private function updateOne(array $filter, array $data): UpdateResult
+  {
+    try {
+      return $this->getContentModelCollection()->updateOne($filter, $data);
+    } catch (Exception $e)
+    {
+      return [];
+    }
   }
 
   private function findOne(array $query): ?BSONDocument
