@@ -8,6 +8,6 @@ class PasswordInvalidException extends SignInException
 {
   public function __construct()
   {
-    parent::__construct('Password is invalid.');
+    parent::__construct('Password is invalid.', 'INVALID_PASSWORD');
   }
 }

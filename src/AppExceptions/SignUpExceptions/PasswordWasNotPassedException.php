@@ -8,6 +8,10 @@ class PasswordWasNotPassedException extends SignUpException
 {
   public function __construct()
   {
-    parent::__construct('You haven\'t passed the password.');
+    parent::__construct(
+      'The password was not passed.',
+      'PASSWORD_NOT_PASSED',
+      400
+    );
   }
 }

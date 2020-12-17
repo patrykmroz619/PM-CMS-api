@@ -8,6 +8,9 @@ class InvalidCompanyNameException extends SignUpException
 {
   public function __construct()
   {
-    parent::__construct('Company name is not valid.');
+    parent::__construct(
+      'The company name is not valid.',
+      'INVALID_COMPANY_NAME'
+    );
   }
 }

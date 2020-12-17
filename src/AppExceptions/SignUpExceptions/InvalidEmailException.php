@@ -8,6 +8,9 @@ class InvalidEmailException extends SignUpException
 {
   public function __construct()
   {
-    parent::__construct('Email is not valid.');
+    parent::__construct(
+      'The email address is not valid.',
+      'INVALID_EMAIL',
+    );
   }
 }

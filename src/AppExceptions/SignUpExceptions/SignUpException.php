@@ -7,10 +7,10 @@ namespace Api\AppExceptions\SignUpExceptions;
 use Api\AppExceptions\AppException;
 
 class SignUpException extends AppException {
-  public function __construct(string $message)
+  public function __construct(string $message, string $type, int $code = 401)
   {
     $this->message = $message;
-    $this->type = 'SIGN_UP_ERROR';
-    $this->code = 401;
+    $this->type = $type;
+    $this->code = $code;
   }
 }

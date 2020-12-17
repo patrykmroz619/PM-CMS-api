@@ -8,6 +8,10 @@ class EmailWasNotPassedException extends SignUpException
 {
   public function __construct()
   {
-    parent::__construct('You haven\'t passed the email.');
+    parent::__construct(
+      'The email address was not passed.',
+      'EMAIL_NOT_PASSED',
+      400
+    );
   }
 }

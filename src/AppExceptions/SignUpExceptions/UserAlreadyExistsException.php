@@ -8,6 +8,9 @@ class UserAlreadyExistsException extends SignUpException
 {
   public function __construct()
   {
-    parent::__construct('An user already exists.');
+    parent::__construct(
+      'An user with passed email address already exists.',
+      'USER_EXISTS'
+    );
   }
 }

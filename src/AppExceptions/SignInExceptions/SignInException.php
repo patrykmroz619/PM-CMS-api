@@ -8,10 +8,10 @@ use Api\AppExceptions\AppException;
 
 class SignInException extends AppException
 {
-  public function __construct(string $message)
+  public function __construct(string $message, string $type)
   {
     $this->message = $message;
     $this->code = 401;
-    $this->type = 'SIGN_IN_ERROR';
+    $this->type = $type;
   }
 }

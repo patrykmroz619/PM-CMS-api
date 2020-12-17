@@ -8,6 +8,9 @@ class InvalidSurnameException extends SignUpException
 {
   public function __construct()
   {
-    parent::__construct('Surname is not valid.');
+    parent::__construct(
+      'The surname is not valid.',
+      'INVALID_SURNAME'
+    );
   }
 }
