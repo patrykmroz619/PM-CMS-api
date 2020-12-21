@@ -8,6 +8,9 @@ class ContentFieldTypeWasNotPassedException extends ContentFieldException
 {
   public function __construct()
   {
-    parent::__construct('The type property of content field was not passed.');
+    parent::__construct(
+      'The type property of content field was not passed.',
+      'FIELD_TYPE_NOT_PASSED'
+    );
   }
 }

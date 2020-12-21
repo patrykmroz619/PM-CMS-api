@@ -8,10 +8,10 @@ POST /login
 
 ## Request body
 
-```json
+```typeScript
 {
-  "email": "string",
-  "password": "string"
+  "email": string,
+  "password": string
 }
 ```
 
@@ -21,18 +21,18 @@ POST /login
 
 - body
 
-```json
+```typeScript
 {
   "userData": {
-    "uid": "string",
-    "email": "string",
-    "name": "string or null",
-    "surname": "string or null",
-    "company": "string or null"
+    "id": string,
+    "email": string,
+    "name": string | null,
+    "surname": string | null,
+    "company": string | null
   },
   "tokens": {
-    "activeToken": "string",
-    "refreshToken": "string"
+    "accessToken": string,
+    "refreshToken": string
   }
 }
 ```
@@ -46,7 +46,7 @@ POST /login
 
 ### Response body
 
-```json
+```typeScript
 {
   "statusCode": status,
   "error": {

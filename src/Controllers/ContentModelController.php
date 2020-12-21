@@ -4,27 +4,34 @@ declare(strict_types=1);
 
 namespace Api\Controllers;
 
+use Api\Models\Content\ContentModel;
+use Api\Services\ContentModel\CreateContentModelService;
+use Api\Services\ContentModel\UpdateContentModelService;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Api\Services\ContentModelService;
-use Psr\Http\Message\ServerRequestInterface;
 
 class ContentModelController
 {
-  private ContentModelService $contentModelService;
+  private CreateContentModelService $createContentModelService;
+  private UpdateContentModelService $updateContentModelService;
+  private ContentModel $contentModel;
 
-  public function __construct(ContentModelService $contentModelService)
+  public function __construct(
+    CreateContentModelService $createContentModelService,
+    UpdateContentModelService $updateContentModelService,
+    ContentModel $contentModel
+  )
   {
-    $this->contentModelService = $contentModelService;
+    $this->createContentModelService = $createContentModelService;
+    $this->updateContentModelService = $updateContentModelService;
+    $this->contentModel = $contentModel;
   }
 
   public function createContentModel(Request $request, Response $response, string $projectId): Response
   {
-    $requestData = $request->getParsedBody();
+    $body = $request->getParsedBody();
 
-    $requestData['projectId'] = $projectId;
-
-    $newContentModel = $this->contentModelService->create($requestData);
+    $newContentModel = $this->createContentModelService->create($projectId, $body);
 
     $response->getBody()->write(json_encode($newContentModel));
     return $response->withStatus(201);
@@ -34,9 +41,9 @@ class ContentModelController
   {
     $body = $request->getParsedBody();
 
-    $contentModels = $this->contentModelService->getContentModels($projectId, $body['uid']);
+    $contentModels = $this->contentModel->findByProjectIdAndUserId($projectId, $body['uid']);
 
-    $response->getBody()->write(json_encode($contentModels));
+    $response->getBody()->write(json_encode(['content-models' => $contentModels]));
     return $response;
   }
 
@@ -44,7 +51,7 @@ class ContentModelController
   {
     $body = $request->getParsedBody();
 
-    $updatedModel = $this->contentModelService->updateContentModel($contentModelId, $body);
+    $updatedModel = $this->updateContentModelService->update($contentModelId, $body);
 
     $response->getBody()->write(json_encode($updatedModel));
     return $response;
@@ -54,7 +61,7 @@ class ContentModelController
   {
     $body = $request->getParsedBody();
 
-    $this->contentModelService->delete($contentModelId, $body['uid']);
+    $this->contentModel->deleteByIdAndUserId($contentModelId, $body['uid']);
 
     $response->getBody()->write(json_encode([]));
     return $response->withStatus(204);

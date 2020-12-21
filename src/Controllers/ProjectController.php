@@ -4,23 +4,35 @@ declare(strict_types=1);
 
 namespace API\Controllers;
 
+use Api\AppExceptions\ProjectExceptions\ProjectNotFoundException;
+use Api\Models\Project\ProjectModel;
+use Api\Services\Project\ProjectCreatorService;
+use Api\Services\Project\UpdateProjectService;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Api\Services\ProjectService;
 
 class ProjectController {
-  private ProjectService $projectService;
+  private ProjectCreatorService $projectCreatorService;
+  private UpdateProjectService $updateProjectService;
+  private ProjectModel $projectModel;
 
-  public function __construct(ProjectService $projectService)
+  public function __construct(
+    ProjectCreatorService $projectCreatorService,
+    UpdateProjectService $updateProjectService,
+    ProjectModel $projectModel
+  )
   {
-    $this->projectService = $projectService;
+    $this->projectModel = $projectModel;
+    $this->projectCreatorService = $projectCreatorService;
+    $this->updateProjectService = $updateProjectService;
   }
 
-  public function addProject(Request $request, Response $response): Response
+  public function createProject(Request $request, Response $response): Response
   {
     $body = $request->getParsedBody();
 
-    $projectData = $this->projectService->addProject($body);
+    $projectData = $this->projectCreatorService->create($body);
 
     $response->getBody()->write(json_encode($projectData));
     return $response->withStatus(201);
@@ -30,7 +42,7 @@ class ProjectController {
   {
     $body = $request->getParsedBody();
 
-    $projects = $this->projectService->getProjects($body['uid']);
+    $projects = $this->projectModel->findByUserId($body['uid']);
 
     $responseData = ['projects' => $projects];
 
@@ -42,7 +54,10 @@ class ProjectController {
   {
     $body = $request->getParsedBody();
 
-    $project = $this->projectService->getOneProject($id, $body['uid']);
+    $project = $this->projectModel->findById($id);
+
+    if($project['userId'] != $body['uid'])
+      throw new ProjectNotFoundException();
 
     $response->getBody()->write(json_encode($project));
     return $response;
@@ -51,7 +66,7 @@ class ProjectController {
   public function updateProject (Request $request, Response $response, string $id): Response
   {
     $body = $request->getParsedBody();
-    $updatedProject = $this->projectService->updateProject($id, $body);
+    $updatedProject = $this->updateProjectService->update($id, $body);
 
     $response->getBody()->write(json_encode($updatedProject));
     return $response;
@@ -61,7 +76,7 @@ class ProjectController {
   {
     $body = $request->getParsedBody();
 
-    $this->projectService->deleteProject($id, $body['uid']);
+    $this->projectModel->deleteByIdAndUserId($id, $body['uid']);
 
     $response->getBody()->write(json_encode([]));
     return $response->withStatus(204);

@@ -7,7 +7,7 @@ namespace Api\Middlewares;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Api\AppExceptions\AuthExceptions\InvalidActiveTokenException;
+use Api\AppExceptions\AuthExceptions\InvalidAccessTokenException;
 use Api\Services\TokenService;
 
 class AuthMiddleware {
@@ -17,10 +17,10 @@ class AuthMiddleware {
 
     $tokenArray = (array) TokenService::validateToken($token);
 
-    if(!empty($tokenArray) && $tokenArray['active'])
+    if(!empty($tokenArray) && $tokenArray['access'])
       return $handler->handle($this->applyUserIdFromTokenToParsedBody($request, $tokenArray));
     else
-      throw new InvalidActiveTokenException();
+      throw new InvalidAccessTokenException();
   }
 
   private function applyUserIdFromTokenToParsedBody(Request $request, array $tokenArray): Request

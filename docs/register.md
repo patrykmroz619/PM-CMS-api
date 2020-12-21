@@ -8,13 +8,13 @@ POST /register
 
 ## Request body
 
-```json
+```typeScript
 {
-  "email": "string",
-  "password": "string",
-  "name": "string", //optional
-  "surname": "string", //optional
-  "company": "string" //optional
+  "email": string,
+  "password": string,
+  "name": string | undefined, //optional
+  "surname": string | undefined, //optional
+  "company": string | undefined //optional
 }
 ```
 
@@ -24,18 +24,18 @@ POST /register
 
 ### Response body
 
-```json
+```typeScript
 {
   "userData": {
-    "uid": "string",
-    "email": "string",
-    "name": "string or null",
-    "surname": "string or null",
-    "company": "string or null"
+    "id": string,
+    "email": string,
+    "name": string | null,
+    "surname": string | null,
+    "company": string | null
   },
   "tokens": {
-    "activeToken": "string",
-    "refreshToken": "string"
+    "accessToken": string,
+    "refreshToken": string
   }
 }
 ```
@@ -46,15 +46,15 @@ POST /register
 | :----: | :------------------: | :-----------------------------------------------: |
 | `400`  |   EMAIL_NOT_PASSED   |         The email address was not passed.         |
 | `400`  | PASSWORD_NOT_PASSED  |           The password was not passed.            |
-| `401`  |    INVALID_EMAIL     |          The email address is not valid.          |
-| `401`  |     INVALID_NAME     |              The name is not valid.               |
-| `401`  |   INVALID_SURNAME    |             The surname is not valid.             |
-| `401`  | INVALID_COMPANY_NAME |          The company name is not valid.           |
+| `400`  |    INVALID_EMAIL     |          The email address is not valid.          |
+| `400`  |     INVALID_NAME     |              The name is not valid.               |
+| `400`  |   INVALID_SURNAME    |             The surname is not valid.             |
+| `400`  | INVALID_COMPANY_NAME |          The company name is not valid.           |
 | `401`  |     USER_EXISTS      | An user with passed email address already exists. |
 
 ### Response body
 
-```json
+```typeScript
 {
   "statusCode": status,
   "error": {

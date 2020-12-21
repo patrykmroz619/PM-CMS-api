@@ -11,8 +11,7 @@ use Api\AppExceptions\AuthExceptions\JWTWasNotPassedException;
 use Api\Settings\Settings;
 
 class TokenService {
-
-  public static function getActiveToken(string $uid): string
+  public static function getAccessToken(string $uid): string
   {
     return self::generateToken($uid, true);
   }
@@ -22,13 +21,18 @@ class TokenService {
     return self::generateToken($uid, false);
   }
 
-  public static function validateToken(string $tokenAsString): ?object
+  public static function validateToken(string $tokenAsString): ?array
   {
     $config = self::getConfig();
     try
     {
       JWT::$leeway = $config['leeway'];
-      return JWT::decode($tokenAsString, $config['hmacKey'], array('HS256'));
+      $token = (array) JWT::decode($tokenAsString, $config['hmacKey'], array('HS256'));
+
+      if(empty($token))
+        return null;
+
+      return $token;
     }
     catch (Exception $e)
     {
@@ -47,12 +51,7 @@ class TokenService {
     return $token;
   }
 
-  // public static function getUserIdFromRequest(Request $request): string
-  // {
-  //   $token = self::getTokenFromRequest($request);
-  // }
-
-  private static function generateToken(string $uid, $active): string
+  private static function generateToken(string $uid, $access): string
   {
     $config = self::getConfig();
 
@@ -62,9 +61,9 @@ class TokenService {
     "iss" => $config['api_url'],
     "aud" => $config['client_url'],
     "iat" => $time,
-    "exp" => $time + ($active ? $config['access_exp'] : $config['refresh_exp']),
+    "exp" => $time + ($access ? $config['access_exp'] : $config['refresh_exp']),
     'uid' => $uid,
-    'active' => $active
+    'access' => $access
     ];
 
     $jwt = JWT::encode($payload, $config['hmacKey']);

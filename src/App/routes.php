@@ -22,18 +22,18 @@ return function (App $app) {
   $app->group('', function (RouteCollectorProxy $group) {
     $group->get('/', [MainController::class, 'hello']);
     $group->get('/users', [UserController::class, 'getActiveUser']);
-    $group->put('/users', [UserController::class, 'updateUserData']);
+    $group->patch('/users', [UserController::class, 'updateUserData']);
     $group->delete('/users', [UserController::class, 'deleteUser']);
 
     $group->get('/projects', [ProjectController::class, 'getProjects']);
-    $group->post('/projects', [ProjectController::class, 'addProject']);
+    $group->post('/projects', [ProjectController::class, 'createProject']);
     $group->get('/projects/{id}', [ProjectController::class, 'getProjectById']);
-    $group->put('/projects/{id}', [ProjectController::class, 'updateProject']);
+    $group->patch('/projects/{id}', [ProjectController::class, 'updateProject']);
     $group->delete('/projects/{id}', [ProjectController::class, 'deleteProject']);
 
     $group->get('/content-models/{projectId}', [ContentModelController::class, 'getContentModels']);
     $group->post('/content-models/{projectId}', [ContentModelController::class, 'createContentModel']);
-    $group->put('/content-models/{contentModelId}', [ContentModelController::class, 'updateContentModel']);
+    $group->patch('/content-models/{contentModelId}', [ContentModelController::class, 'updateContentModel']);
     $group->delete('/content-models/{contentModelId}', [ContentModelController::class, 'deleteContentModel']);
 
     $group->post('/content-model-fields/{contentModelId}', [ContentFieldController::class, 'addField']);

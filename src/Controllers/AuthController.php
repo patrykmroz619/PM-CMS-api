@@ -6,22 +6,32 @@ namespace Api\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Api\Services\AuthService;
+use Api\Services\Auth\RefreshTokenService;
+use Api\Services\Auth\SignInService;
+use Api\Services\Auth\SignUpService;
 use Api\Services\TokenService;
 
 class AuthController {
-  private AuthService $authService;
+  private SignUpService $signUpService;
+  private SignInService $signInService;
+  private RefreshTokenService $refreshTokenService;
 
-  public function __construct(AuthService $authService)
+  public function __construct(
+    SignUpService $signUpService,
+    SignInService $signInService,
+    RefreshTokenService $refreshTokenService
+  )
   {
-    $this->authService = $authService;
+    $this->signUpService = $signUpService;
+    $this->signInService = $signInService;
+    $this->refreshTokenService = $refreshTokenService;
   }
 
   public function signIn(Request $request, Response $response): Response
   {
     $body = $request->getParsedBody();
 
-    $responseData = $this->authService->signIn($body);
+    $responseData = $this->signInService->signIn($body);
 
     $response->getBody()->write(json_encode($responseData));
     return $response;
@@ -31,7 +41,7 @@ class AuthController {
   {
     $body = $request->getParsedBody();
 
-    $responseData = $this->authService->signUp($body);
+    $responseData = $this->signUpService->signUp($body);
 
     $response->getBody()->write(json_encode($responseData));
     return $response;
@@ -41,7 +51,7 @@ class AuthController {
   {
     $token = TokenService::getTokenFromRequest($request);
 
-    $newTokens = $this->authService->refreshToken($token);
+    $newTokens = $this->refreshTokenService->refreshToken($token);
 
     $response->getBody()->write(json_encode($newTokens));
     return $response;

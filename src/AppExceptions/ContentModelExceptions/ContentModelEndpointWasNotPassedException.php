@@ -8,6 +8,9 @@ class ContentModelEndpointWasNotPassedException extends ContentModelException
 {
   public function __construct()
   {
-    parent::__construct('The content model\'s api endpoint was not passed.');
+    parent::__construct(
+      'The content model\'s api endpoint was not passed.',
+      'ENDPOINT_NOT_PASSED'
+    );
   }
 }

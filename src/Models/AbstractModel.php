@@ -5,32 +5,78 @@ declare(strict_types=1);
 namespace Api\Models;
 
 use MongoDB\Collection;
-use MongoDB\Database;
 use Api\Database\DatabaseConnector;
+use MongoDB\BSON\ObjectId;
+use MongoDB\DeleteResult;
+use MongoDB\InsertOneResult;
+use MongoDB\UpdateResult;
 
 abstract class AbstractModel {
-  private Database $db;
+  private Collection $collection;
 
-  public function __construct()
+  protected function connectWithCollection($collectionName): void
   {
-    $this->db = $this->createConnection();
+    $db = DatabaseConnector::connect();
+    $this->collection = $db->selectCollection($collectionName);
   }
 
-  private function createConnection() : Database
+  protected function findOne($filter, $options = []): ?array
   {
-    return DatabaseConnector::connect();
+    $result = (array) $this->collection->findOne($filter, $options);
+    return $this->convertObjectIdOnString($result);
   }
 
-  protected function getCollection(string $collectionName)
+  protected function findMany($filter, $options = []): array
   {
-    $collection = $this->db->selectCollection($collectionName);
-    return $collection;
+    $cursor = $this->collection->find($filter, $options);
+    $result = [];
+
+    foreach ($cursor as $project)
+    {
+      $projectArray = (array) $project;
+      $projectArray = $this->convertObjectIdOnString($projectArray);
+      array_push($result, $projectArray);
+    }
+
+    return $result;
+  }
+
+  protected function insertOne(array $data): InsertOneResult
+  {
+    return $this->collection->insertOne($data);
+  }
+
+  protected function updateOne(array $filter, array $update): UpdateResult
+  {
+    return $this->collection->updateOne($filter, $update);
+  }
+
+  protected function deleteOne(array $filter): DeleteResult
+  {
+    return $this->collection->deleteOne($filter);
+  }
+
+  protected function deleteMany(array $filter): DeleteResult
+  {
+    return $this->collection->deleteMany($filter);
+  }
+
+  protected function count(array $filter, array $options = []): int
+  {
+    return $this->collection->countDocuments($filter, $options);
+  }
+
+  protected function getIdFilter(string $id): array
+  {
+    return ['_id' => new ObjectId($id)];
   }
 
   protected function convertObjectIdOnString(array $item): array
   {
-    $item['id'] = ((array)$item['_id'])['oid']; // getting id as string from mongo object id.
-    unset($item['_id']);
+    if(isset($item['_id'])) {
+      $item['id'] = $item['_id']->__toString(); // getting id as string from mongo object id.
+      unset($item['_id']);
+    }
     return $item;
   }
 }

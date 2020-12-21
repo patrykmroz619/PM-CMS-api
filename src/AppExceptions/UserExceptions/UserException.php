@@ -7,10 +7,10 @@ namespace Api\AppExceptions\UserExceptions;
 use Api\AppExceptions\AppException;
 
 class UserException extends AppException {
-  public function __construct(string $message)
+  public function __construct(string $message, string $type = 'USER_ERROR')
   {
     $this->message = $message;
-    $this->type = "USER_ERROR";
+    $this->type = $type;
     $this->code = 400;
   }
 }

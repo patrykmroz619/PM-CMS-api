@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace Api\Validators\FieldDataValidators;
 
-use Api\AppExceptions\ContentFieldExceptions\ContentFieldException;
+use Api\AppExceptions\ContentFieldExceptions\InvalidContentFieldDataException;
 
 class TextFieldValidator extends AbstractFieldDataValidator
 {
   public function validate(array $data): array
   {
     $this->validateFieldType($data, 'text');
-    $this->validateFieldName($data);
+    $this->validateFieldName($data, 'text');
     $this->validateMinAndMaxLengthProperties($data);
-    $this->validateBooleanProperty($data, 'multiline');
-    $this->validateBooleanProperty($data, 'unique');
+    $this->validateBooleanProperty($data, 'multiline', 'text');
+    $this->validateBooleanProperty($data, 'unique', 'text');
 
     $correctData = [
       'type' => $data['type'],
       'name' => $data['name'],
-      'minLength' => $data['minLength'] ?? null,
-      'maxLength' => $data['maxLength'] ?? null,
+      'multiline' => $data['multiline'],
       'unique' => $data['unique'],
-      'multiline' => $data['multiline']
+      'minLength' => $data['minLength'] ?? null,
+      'maxLength' => $data['maxLength'] ?? null
     ];
 
     return $correctData;
@@ -31,13 +31,13 @@ class TextFieldValidator extends AbstractFieldDataValidator
   private function validateMinAndMaxLengthProperties(array $data): void
   {
     if(isset($data['minLength'])) {
-      if(is_int($data['minLength']))
-        throw new ContentFieldException('The integer is an expected type of minLength property.');
+      if(!is_int($data['minLength']))
+        throw new InvalidContentFieldDataException('The integer is an expected type of minLength property.', 'text');
     }
 
     if(isset($data['maxLength'])) {
-      if(is_int($data['maxLength']))
-        throw new ContentFieldException('The integer is an expected type of maxLength property.');
+      if(!is_int($data['maxLength']))
+        throw new InvalidContentFieldDataException('The integer is an expected type of maxLength property.', 'text');
     }
   }
 }

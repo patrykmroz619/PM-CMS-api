@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\AppExceptions\ContentModelExceptions;
 
-class ContentModelNotFound extends ContentModelException
+class ContentModelNotFoundException extends ContentModelException
 {
   public function __construct()
   {

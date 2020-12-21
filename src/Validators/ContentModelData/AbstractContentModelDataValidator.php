@@ -2,45 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Api\Validators;
+namespace Api\Validators\ContentModelData;
 
 use Api\AppExceptions\ContentModelExceptions\ContentModelEndpointWasNotPassedException;
 use Api\AppExceptions\ContentModelExceptions\ContentModelNameWasNotPassedException;
 use Api\AppExceptions\ContentModelExceptions\InvalidApiEndpointForContentModelException;
 use Api\AppExceptions\ContentModelExceptions\InvalidContentModelNameLengthException;
 
-class ContentModelDataValidator
+abstract class AbstractContentModelDataValidator
 {
-  public function validate(array $data): array
-  {
-    $this->validateName($data);
-    $this->validateEndpoint($data);
-
-    $correctData = [
-      'name' => $data['name'],
-      'endpoint' => $data['endpoint']
-    ];
-
-    return $correctData;
-  }
-
-  public function validateToUpdate(array $data): array
-  {
-    $correctData = [];
-    if(isset($data['name'])) {
-      $this->validateName($data);
-      $correctData['name'] = $data['name'];
-    }
-
-    if(isset($data['endpoint'])) {
-      $this->validateEndpoint($data);
-      $correctData['endpoint'] = $data['endpoint'];
-    }
-
-    return $correctData;
-  }
-
-  private function validateName(array $data): bool
+  protected function validateName(array $data): bool
   {
     if(!isset($data['name'])) {
       throw new ContentModelNameWasNotPassedException();
@@ -53,7 +24,7 @@ class ContentModelDataValidator
     return true;
   }
 
-  private function validateEndpoint($data): bool
+  protected function validateEndpoint($data): bool
   {
     if(!isset($data['endpoint']))
       throw new ContentModelEndpointWasNotPassedException();

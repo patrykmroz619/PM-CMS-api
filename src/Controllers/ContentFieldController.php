@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Api\Controllers;
 
-use Api\Services\ContentFieldService;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Api\Services\ContentModel\ContentFieldService;
 
 class ContentFieldController
 {
@@ -33,6 +33,6 @@ class ContentFieldController
 
     $this->contentFieldService->deleteFieldFromContentModel($contentModelId, $body);
 
-    return $response;
+    return $response->withStatus(204);
   }
 }

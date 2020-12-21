@@ -8,6 +8,9 @@ class ContentModelAlreadyExistsException extends ContentModelException
 {
   public function __construct()
   {
-    parent::__construct('The content model with passed name is already exists.');
+    parent::__construct(
+      'The content model with passed name already exists.',
+      'CONTENT_MODEL_EXISTS'
+    );
   }
 }

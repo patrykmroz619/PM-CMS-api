@@ -8,6 +8,9 @@ class ContentModelNameWasNotPassedException extends ContentModelException
 {
   public function __construct()
   {
-    parent::__construct('The content model\'s name was not passed.');
+    parent::__construct(
+      'The content model\'s name was not passed.',
+      'NAME_NOT_PASSED'
+    );
   }
 }

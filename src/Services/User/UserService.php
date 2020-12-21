@@ -2,34 +2,36 @@
 
 declare(strict_types=1);
 
-namespace Api\Services;
+namespace Api\Services\User;
 
 use Api\AppExceptions\UserExceptions\DeleteUserWasNotCompletedException;
-use Api\Models\ProjectModel;
-use Api\Models\UserModel;
-use Api\Validators\UserDataValidator;
+use Api\Models\Project\ProjectModel;
+use Api\Models\User\UserModel;
+use Api\Validators\UserData\UpdateUserDataValidator;
 
 class UserService {
   private UserModel $userModel;
-  private UserDataValidator $userDataValidator;
+  private UpdateUserDataValidator $validator;
 
   public function __construct()
   {
     $this->userModel = new UserModel();
-    $this->userDataValidator = new UserDataValidator();
+    $this->validator = new UpdateUserDataValidator();
   }
 
-  public function getUser(string $uid): array
+  public function getUser(string $userId): array
   {
-    return $this->userModel->getUserById($uid);
+    return $this->userModel->findById($userId);
   }
 
   public function updateUserData(array $data): array
   {
-    $updatedData = $this->userDataValidator->updateValidate($data);
+    $updatedData = $this->validator->validate($data);
 
-    $this->userModel->updateById($data['uid'], $updatedData);
-    $updatedUser = $this->userModel->getUserById($data['uid']);
+    $userId = $data['uid'];
+
+    $this->userModel->update($userId, $updatedData);
+    $updatedUser = $this->userModel->findById($userId);
 
     unset($updatedUser['refreshToken']);
     unset($updatedUser['password']);
@@ -40,9 +42,9 @@ class UserService {
 
   public function deleteUser(string $uid): void
   {
-    $result = $this->userModel->delete($uid);
+    $complete = $this->userModel->delete($uid);
 
-    if($result->getDeletedCount() == 0)
+    if(!$complete)
       throw new DeleteUserWasNotCompletedException();
 
     $projectModel = new ProjectModel();

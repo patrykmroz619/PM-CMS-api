@@ -8,6 +8,9 @@ class ContentModelNameIsNotUnique extends ContentModelException
 {
   public function __construct()
   {
-    parent::__construct('The content model\'s name is not unique.');
+    parent::__construct(
+      'The content model\'s name is not unique.',
+      'NAME_NOT_UNIQUE'
+    );
   }
 }

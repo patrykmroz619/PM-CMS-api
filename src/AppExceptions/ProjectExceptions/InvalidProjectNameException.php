@@ -10,6 +10,10 @@ class InvalidProjectNameException extends AppException
 {
   public function __construct()
   {
-    parent::__construct('Project name is not correct', 400, 'PROJECT_ERROR');
+    parent::__construct(
+      'The project name is not valid.',
+      400,
+      'INVALID_PROJECT_NAME'
+    );
   }
 }

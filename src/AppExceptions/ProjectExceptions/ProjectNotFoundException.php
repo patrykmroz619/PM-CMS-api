@@ -10,6 +10,6 @@ class ProjectNotFoundException extends AppException
 {
   public function __construct()
   {
-    parent::__construct('The Project with the passed id was not found.', 400, 'PROJECT_ERROR');
+    parent::__construct('The Project was not found.', 400, 'PROJECT_NOT_FOUND');
   }
 }

@@ -2,9 +2,9 @@
 
 declare (strict_types=1);
 
-namespace Api\AppExceptions\SignUpExceptions;
+namespace Api\AppExceptions\UserExceptions;
 
-class InvalidSurnameException extends SignUpException
+class InvalidSurnameException extends UserException
 {
   public function __construct()
   {

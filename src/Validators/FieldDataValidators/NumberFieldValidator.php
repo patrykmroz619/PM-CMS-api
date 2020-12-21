@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace Api\Validators\FieldDataValidators;
 
 use Api\AppExceptions\ContentFieldExceptions\ContentFieldException;
+use Api\AppExceptions\ContentFieldExceptions\InvalidContentFieldDataException;
 
 class NumberFieldValidator extends AbstractFieldDataValidator
 {
   public function validate(array $data): array
   {
     $this->validateFieldType($data, 'number');
-    $this->validateFieldName($data);
-    $this->validateBooleanProperty($data, 'isInteger');
+    $this->validateFieldName($data, 'number');
+    $this->validateBooleanProperty($data, 'integer', 'number');
     $this->validateMinAndMaxProperties($data);
 
     $correctData = [
       'type' => $data['type'],
       'name' => $data['name'],
-      'isInteger' => $data['isInteger'],
+      'integer' => $data['integer'],
       'min' => $data['min'] ?? null,
       'max' => $data['max'] ?? null
     ];
@@ -29,13 +30,13 @@ class NumberFieldValidator extends AbstractFieldDataValidator
   private function validateMinAndMaxProperties(array $data): void
   {
     if(isset($data['min'])) {
-      if(is_numeric($data['min']))
-        throw new ContentFieldException('The min property is not a number.');
+      if(!is_numeric($data['min']))
+        throw new InvalidContentFieldDataException('The min property is not a number.', 'number');
     }
 
     if(isset($data['max'])) {
-      if(is_numeric($data['max']))
-        throw new ContentFieldException('The max property is not a number.');
+      if(!is_numeric($data['max']))
+        throw new InvalidContentFieldDataException('The max property is not a number.', 'number');
     }
   }
 }

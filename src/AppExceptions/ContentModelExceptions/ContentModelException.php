@@ -8,10 +8,10 @@ use Api\AppExceptions\AppException;
 
 class ContentModelException extends AppException
 {
-  public function __construct(string $message)
+  public function __construct(string $message, string $type = 'CONTENT_MODEL_ERROR')
   {
     $this->code = 400;
     $this->message = $message;
-    $this->type = 'CONTENT_MODEL_ERROR';
+    $this->type = $type;
   }
 }

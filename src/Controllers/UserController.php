@@ -6,7 +6,7 @@ namespace Api\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Api\Services\UserService;
+use Api\Services\User\UserService;
 
 class UserController {
   private UserService $userService;
@@ -23,7 +23,7 @@ class UserController {
     $user = $this->userService->getUser($body['uid']);
 
     $userData = [
-      'uid' => $user['uid'],
+      'id' => $user['id'],
       'email' => $user['email'],
       'name' => $user['name'] ?? null,
       'surname' => $user['surname'] ?? null,

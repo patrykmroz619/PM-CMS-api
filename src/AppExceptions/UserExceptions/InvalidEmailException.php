@@ -2,9 +2,9 @@
 
 declare (strict_types=1);
 
-namespace Api\AppExceptions\SignUpExceptions;
+namespace Api\AppExceptions\UserExceptions;
 
-class InvalidEmailException extends SignUpException
+class InvalidEmailException extends UserException
 {
   public function __construct()
   {

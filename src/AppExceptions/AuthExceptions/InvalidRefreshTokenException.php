@@ -8,6 +8,6 @@ class InvalidRefreshTokenException extends AuthException
 {
   public function __construct()
   {
-    parent::__construct('Refresh token is invalid or expired.');
+    parent::__construct('The refresh token is invalid or expired.', 'INVALID_REFRESH_TOKEN');
   }
 }

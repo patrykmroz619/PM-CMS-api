@@ -8,6 +8,6 @@ class DeleteUserWasNotCompletedException extends UserException
 {
   public function __construct()
   {
-    parent::__construct('Deleting user was not completed.');
+    parent::__construct('Deleting user was not completed.', 'DELETE_ERROR');
   }
 }

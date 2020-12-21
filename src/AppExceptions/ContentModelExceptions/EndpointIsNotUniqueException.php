@@ -10,6 +10,9 @@ class EndpointIsNotUniqueException extends ContentModelException
 {
   public function __construct()
   {
-    parent::__construct('The api endpoint must be unique.');
+    parent::__construct(
+      'The content model\'s api endpoint is not unique.',
+      'ENDPOINT_NOT_UNIQUE'
+    );
   }
 }
