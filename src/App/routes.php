@@ -37,6 +37,7 @@ return function (App $app) {
     $group->delete('/content-models/{contentModelId}', [ContentModelController::class, 'deleteContentModel']);
 
     $group->post('/content-model-fields/{contentModelId}', [ContentFieldController::class, 'addField']);
+    $group->put('/content-model-fields/{contentModelId}', [ContentFieldController::class, 'updateField']);
     $group->delete('/content-model-fields/{contentModelId}', [ContentFieldController::class, 'deleteField']);
   })->add(new AuthMiddleware());
 };

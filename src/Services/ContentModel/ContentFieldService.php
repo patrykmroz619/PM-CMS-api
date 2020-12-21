@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Api\Services\ContentModel;
 
 use Api\AppExceptions\ContentFieldExceptions\ContentFieldAlreadyExists;
-use Api\AppExceptions\ContentFieldExceptions\ContentFieldException;
 use Api\AppExceptions\ContentFieldExceptions\ContentFieldNotFoundException;
 use Api\AppExceptions\ContentFieldExceptions\ContentFieldTypeIsInvalidException;
-use Api\AppExceptions\ContentFieldExceptions\NameOfContentFieldNotPassedException;
+use Api\AppExceptions\ContentFieldExceptions\IdOfContentFieldNotPassedException;
 use Api\AppExceptions\ContentModelExceptions\ContentModelNotFoundException;
 use Api\Models\Content\ContentModel;
 use Api\Models\ContentField\ContentFieldModel;
@@ -29,33 +28,49 @@ class ContentFieldService
 
   public function addFieldToContentModel(string $contentModelId, array $data): array
   {
-    $newFieldData = $this->validateFieldToAdd($contentModelId, $data);
+    $data['id'] = uniqid();
+
+    $newFieldData = $this->validateField($contentModelId, $data);
 
     $this->contentFieldModel->addField($contentModelId, $newFieldData);
 
     return $newFieldData;
   }
 
+  public function updateField(string $contentModelId, array $data): array
+  {
+    $this->contentFieldModel->isFieldWithIdExist($contentModelId, $data['id']);
+
+    $updateFieldData = $this->validateField($contentModelId, $data, true);
+
+    $this->contentFieldModel->updateField($contentModelId, $updateFieldData['id'], $updateFieldData);
+
+    return $updateFieldData;
+  }
+
   public function deleteFieldFromContentModel(string $contentModelId, array $data): void
   {
     $this->isContentModelBelongToUser($contentModelId, $data['uid']);
 
-    if(!isset($data['name']))
-      throw new NameOfContentFieldNotPassedException();
+    if(!isset($data['id']))
+      throw new IdOfContentFieldNotPassedException();
 
-    $result = $this->contentFieldModel->deleteField($contentModelId, $data['name']);
+    $result = $this->contentFieldModel->deleteField($contentModelId, $data['id']);
 
     if($result->getModifiedCount() == 0)
       throw new ContentFieldNotFoundException();
   }
 
-  private function validateFieldToAdd(string $contentModelId, array $data): array
+  private function validateField(string $contentModelId, array $data, bool $update = false): array
   {
+    if(!isset($data['id']))
+      throw new IdOfContentFieldNotPassedException();
+
     $this->isContentModelBelongToUser($contentModelId, $data['uid']);
 
     $newField = $this->getFieldObject($data);
 
-    $this->isFieldNameUnique($newField, $contentModelId);
+    $this->isFieldNameUnique($newField, $contentModelId, $update);
 
     return $newField->getData();
   }
@@ -72,15 +87,21 @@ class ContentFieldService
     }
   }
 
-  private function isFieldNameUnique(AbstractContentField $field, string $contentModelId): void
+  private function isFieldNameUnique(AbstractContentField $field, string $contentModelId, bool $update): void
   {
     $currentFields = $this->contentFieldModel->getFields($contentModelId);
 
     $name = $field->getName();
+    $id = $field->getId();
 
     foreach($currentFields as $currField) {
-      if($currField['name'] === $name)
-        throw new ContentFieldAlreadyExists();
+      if($update) {
+        if($currField['name'] == $name && $currField['id'] != $id)
+          throw new ContentFieldAlreadyExists();
+      } else {
+        if($currField['name'] == $name)
+          throw new ContentFieldAlreadyExists();
+      }
     }
   }
 

@@ -17,6 +17,7 @@ class NumberFieldValidator extends AbstractFieldDataValidator
     $this->validateMinAndMaxProperties($data);
 
     $correctData = [
+      'id' => $data['id'],
       'type' => $data['type'],
       'name' => $data['name'],
       'integer' => $data['integer'],

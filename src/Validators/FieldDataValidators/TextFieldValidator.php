@@ -17,6 +17,7 @@ class TextFieldValidator extends AbstractFieldDataValidator
     $this->validateBooleanProperty($data, 'unique', 'text');
 
     $correctData = [
+      'id' => $data['id'],
       'type' => $data['type'],
       'name' => $data['name'],
       'multiline' => $data['multiline'],

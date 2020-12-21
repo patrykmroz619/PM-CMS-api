@@ -24,6 +24,15 @@ class ContentFieldController
     $newfield = $this->contentFieldService->addFieldToContentModel($contentModelId, $body);
 
     $response->getBody()->write(json_encode($newfield));
+    return $response->withStatus(201);
+  }
+  public function updateField(Request $request, Response $response, string $contentModelId): Response
+  {
+    $body = $request->getParsedBody();
+
+    $updatedField = $this->contentFieldService->updateField($contentModelId, $body);
+
+    $response->getBody()->write(json_encode($updatedField));
     return $response;
   }
 

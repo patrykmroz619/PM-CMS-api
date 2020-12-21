@@ -14,6 +14,11 @@ abstract class AbstractContentField
     return $this->fieldData['name'];
   }
 
+  public function getId(): string
+  {
+    return $this->fieldData['id'];
+  }
+
   public function getData(): array
   {
     return $this->fieldData;
