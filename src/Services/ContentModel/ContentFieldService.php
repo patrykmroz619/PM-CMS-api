@@ -12,6 +12,8 @@ use Api\AppExceptions\ContentModelExceptions\ContentModelNotFoundException;
 use Api\Models\Content\ContentModel;
 use Api\Models\ContentField\ContentFieldModel;
 use Api\Services\ContentFields\AbstractContentField;
+use Api\Services\ContentFields\BooleanField;
+use Api\Services\ContentFields\ColorField;
 use Api\Services\ContentFields\NumberField;
 use Api\Services\ContentFields\TextField;
 
@@ -82,6 +84,10 @@ class ContentFieldService
         return new TextField($data);
       case 'number':
         return new NumberField($data);
+      case 'boolean':
+        return new BooleanField($data);
+      case 'color':
+        return new ColorField($data);
       default:
         throw new ContentFieldTypeIsInvalidException();
     }

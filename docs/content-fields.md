@@ -40,6 +40,26 @@ The request body have to contain one of field's objects.
 }
 ```
 
+- Boolean field
+
+```typeScript
+{
+  "id": string,
+  "type": "number",
+  "name": string
+}
+```
+
+- Color field
+
+```typeScript
+{
+  "id": string,
+  "type": "color"
+  "name": string,
+}
+```
+
 ## Succes response
 
 - status: `201`
@@ -67,6 +87,8 @@ Response body contain one of field's objects from list.
 | `400`  | INVALID_NUMBER_FIELD_DATA |              The max property is not a number.              |
 | `400`  | INVALID_NUMBER_FIELD_DATA |   The integer property of the content field is required.    |
 | `400`  | INVALID_NUMBER_FIELD_DATA |  The boolean is an expected type of the integer property.   |
+| `400`  | INVALID_COLOR_FIELD_DATA  |     The value property of the color field is required.      |
+| `400`  | INVALID_COLOR_FIELD_DATA  |      The value property of the color field is invalid.      |
 
 ### Response body
 
@@ -119,6 +141,8 @@ Response body contain one of field's objects from list.
 | `400`  | INVALID_NUMBER_FIELD_DATA |              The max property is not a number.              |
 | `400`  | INVALID_NUMBER_FIELD_DATA |   The integer property of the content field is required.    |
 | `400`  | INVALID_NUMBER_FIELD_DATA |  The boolean is an expected type of the integer property.   |
+| `400`  | INVALID_COLOR_FIELD_DATA  |     The value property of the color field is required.      |
+| `400`  | INVALID_COLOR_FIELD_DATA  |      The value property of the color field is invalid.      |
 
 ### Response body
 
