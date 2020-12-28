@@ -31,11 +31,11 @@ abstract class AbstractModel {
     $cursor = $this->collection->find($filter, $options);
     $result = [];
 
-    foreach ($cursor as $project)
+    foreach ($cursor as $document)
     {
-      $projectArray = (array) $project;
-      $projectArray = $this->convertObjectIdOnString($projectArray);
-      array_push($result, $projectArray);
+      $documentArray = (array) $document;
+      $documentArray = $this->convertObjectIdOnString($documentArray);
+      array_push($result, $documentArray);
     }
 
     return $result;

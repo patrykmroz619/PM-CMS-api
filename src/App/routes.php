@@ -12,6 +12,7 @@ use Api\Controllers\ContentFieldController;
 use Api\Controllers\MainController;
 use Api\Controllers\UserController;
 use Api\Controllers\ProjectController;
+use Api\Controllers\RecordController;
 use Api\Middlewares\AuthMiddleware;
 
 return function (App $app) {
@@ -39,5 +40,10 @@ return function (App $app) {
     $group->post('/content-model-fields/{contentModelId}', [ContentFieldController::class, 'addField']);
     $group->put('/content-model-fields/{contentModelId}', [ContentFieldController::class, 'updateField']);
     $group->delete('/content-model-fields/{contentModelId}', [ContentFieldController::class, 'deleteField']);
+
+    $group->get('/records/{contentModelId}', [RecordController::class, 'getRecords']);
+    $group->post('/records/{contentModelId}', [RecordController::class, 'addRecord']);
+    $group->put('/records/{recordId}', [RecordController::class, 'updateRecord']);
+    $group->delete('/records/{recordId}', [RecordController::class, 'deleteRecord']);
   })->add(new AuthMiddleware());
 };

@@ -13,4 +13,12 @@ class ColorField extends AbstractContentField
     $validator = new ColorFieldValidator();
     $this->fieldData = $validator->validate($data);
   }
+
+  public function validateRecordItem(array $recordItem): array
+  {
+    return [
+      'name' => $recordItem['name'],
+      'value' => $recordItem['value']
+    ];
+  }
 }

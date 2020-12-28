@@ -14,12 +14,14 @@ class NumberFieldValidator extends AbstractFieldDataValidator
     $this->validateFieldType($data, 'number');
     $this->validateFieldName($data, 'number');
     $this->validateBooleanProperty($data, 'integer', 'number');
+    $this->validateBooleanProperty($data, 'unique', 'number');
     $this->validateMinAndMaxProperties($data);
 
     $correctData = [
       'id' => $data['id'],
       'type' => $data['type'],
       'name' => $data['name'],
+      'unique' => $data['unique'],
       'integer' => $data['integer'],
       'min' => $data['min'] ?? null,
       'max' => $data['max'] ?? null

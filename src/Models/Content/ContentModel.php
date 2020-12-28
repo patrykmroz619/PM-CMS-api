@@ -29,7 +29,12 @@ class ContentModel extends AbstractContentModel
   {
     $filter = $this->getIdFilter($contentModelId);
     $filter['userId'] = $userId;
-    return $this->findOne($filter);
+    $result = $this->findOne($filter);
+
+    if(empty($result))
+      throw new ContentModelNotFoundException();
+
+    return $result;
   }
 
   public function create(array $data): string

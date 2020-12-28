@@ -32,7 +32,7 @@ class ContentFieldModel extends AbstractContentFieldModel
   public function updateField(string $contentModelId, string $fieldId, array $data): UpdateResult
   {
     $filter = $this->getIdFilter($contentModelId);
-    $filter['fields'] = ['id' => $fieldId];
+    $filter['fields.id'] = $fieldId;
     return $this->updateOne($filter, ['$set' => ['fields.$' => $data]]);
   }
 
