@@ -2,7 +2,6 @@
 
 namespace Api\Services\ContentFields;
 
-use Api\Validators\FieldDataValidators\DateFieldValidator;
 use Api\Validators\FieldDataValidators\MediaFieldValidator;
 
 class MediaField extends AbstractContentField

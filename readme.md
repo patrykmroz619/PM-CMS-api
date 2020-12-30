@@ -52,8 +52,16 @@ composer run-api
 
 ### Public routes
 
-- [Login](docs/login.md) : `POST /login`
+- [Login](docs/login.md) : `/login`
 
-- [Register](docs/register.md) : `POST /register`
+- [Register](docs/register.md) : `/register`
 
 ### Private routes
+
+- [Users](docs/users.md) : `/users`
+
+- [Projects](docs/projects.md) : `/projects`
+
+- [Content models](docs/content-models) : `/content-models`
+
+- [Content model fields](docs/content-fields) : `/content-model-fields`
