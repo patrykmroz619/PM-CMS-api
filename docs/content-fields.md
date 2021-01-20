@@ -105,7 +105,7 @@ Response body contain one of field's objects from list.
 # Update field in content model
 
 ```http
-POST /content-model-fields/{projectId}
+PUT /content-model-fields/{projectId}
 ```
 
 - Request header: `Authorization: "bearer <accessToken>"`
@@ -168,7 +168,7 @@ DELETE /content-model-fields/{contentModelId}
 
 ```typeScript
 {
-  "name": string
+  "id": string
 }
 ```
 

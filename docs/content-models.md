@@ -18,7 +18,7 @@ The body of request should be empty.
 
 ```typeScript
 {
-  "contentModels": array[ContentModel]
+  array[ContentModel]
 }
 ```
 

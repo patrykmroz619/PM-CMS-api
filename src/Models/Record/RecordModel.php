@@ -42,7 +42,7 @@ class RecordModel extends AbstractRecordModel
   public function updateRecord(string $recordId, array $data): UpdateResult
   {
     $filter = $this->getIdFilter($recordId);
-    return $this->updateOne($filter, ['$set' => ['record' => $data]]);
+    return $this->updateOne($filter, ['$set' => ['data' => $data]]);
   }
 
   public function deleteByIdAndUserId(string $recordId, string $userId): void

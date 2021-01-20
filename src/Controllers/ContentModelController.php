@@ -43,7 +43,7 @@ class ContentModelController
 
     $contentModels = $this->contentModel->findByProjectIdAndUserId($projectId, $body['uid']);
 
-    $response->getBody()->write(json_encode(['content-models' => $contentModels]));
+    $response->getBody()->write(json_encode($contentModels));
     return $response;
   }
 
