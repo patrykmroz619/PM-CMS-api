@@ -16,15 +16,17 @@ class AddRecordService extends AbstractRecordService
     $contentModel = $this->contentModel->findByIdAndUserId($contentModelId, $requestData['uid']);
     $fields = (array) $contentModel['fields'];
 
-    $newRecord = $this->processRecordData($requestData['record'], $fields, $contentModelId);
+    $newRecordData = $this->processRecordData($requestData['record'], $fields, $contentModelId);
 
     $dataToSave = [
       'userId' => $requestData['uid'],
       'contentModelId' => $contentModelId,
-      'data' => $newRecord
+      'data' => $newRecordData
     ];
 
-    $this->recordModel->add($dataToSave);
+    $newRecordId = $this->recordModel->add($dataToSave);
+
+    $dataToSave['id'] = $newRecordId;
 
     return $dataToSave;
   }

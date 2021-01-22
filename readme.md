@@ -56,12 +56,16 @@ composer run-api
 
 - [Register](docs/register.md) : `/register`
 
+- [Refresh JWT](docs/refresh.md) : `/refresh`
+
 ### Private routes
 
 - [Users](docs/users.md) : `/users`
 
 - [Projects](docs/projects.md) : `/projects`
 
-- [Content models](docs/content-models) : `/content-models`
+- [Content models](docs/content-models.md) : `/content-models`
 
-- [Content model fields](docs/content-fields) : `/content-model-fields`
+- [Content model fields](docs/content-fields.md) : `/content-model-fields`
+
+- [Records](docs/records.md) : `/records`

@@ -29,7 +29,7 @@ class UpdateRecordService extends AbstractRecordService
     if($result->getMatchedCount() == 0)
       throw new RecordNotFoundException();
 
-    $record['record'] = $updatedRecord;
+    $record['data'] = $updatedRecord;
 
     return $record;
   }
