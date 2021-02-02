@@ -21,7 +21,8 @@ return function (App $app) {
   $app->post('/refresh', [AuthController::class, 'refreshToken']);
 
   $app->group('', function (RouteCollectorProxy $group) {
-    $group->get('/', [MainController::class, 'hello']);
+    $group->post('/logout', [AuthController::class, 'logout']);
+
     $group->get('/users', [UserController::class, 'getActiveUser']);
     $group->patch('/users', [UserController::class, 'updateUserData']);
     $group->delete('/users', [UserController::class, 'deleteUser']);

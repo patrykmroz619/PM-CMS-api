@@ -4,6 +4,7 @@ declare (strict_types=1);
 
 namespace Api\Controllers;
 
+use Api\Models\User\UserModel;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Api\Services\Auth\RefreshTokenService;
@@ -15,16 +16,19 @@ class AuthController {
   private SignUpService $signUpService;
   private SignInService $signInService;
   private RefreshTokenService $refreshTokenService;
+  private UserModel $userModel;
 
   public function __construct(
     SignUpService $signUpService,
     SignInService $signInService,
-    RefreshTokenService $refreshTokenService
+    RefreshTokenService $refreshTokenService,
+    UserModel $userModel
   )
   {
     $this->signUpService = $signUpService;
     $this->signInService = $signInService;
     $this->refreshTokenService = $refreshTokenService;
+    $this->userModel = $userModel;
   }
 
   public function signIn(Request $request, Response $response): Response
@@ -55,5 +59,14 @@ class AuthController {
 
     $response->getBody()->write(json_encode($newTokens));
     return $response;
+  }
+
+  public function logout(Request $request, Response $response): Response
+  {
+    $body = $request->getParsedBody();
+
+    $this->userModel->removeToken($body['uid']);
+
+    return $response->withStatus(204);
   }
 }

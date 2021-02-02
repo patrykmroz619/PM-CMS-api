@@ -31,6 +31,12 @@ class UserModel extends AbstractUserModel
     $this->updateOne($filter, ['$set' => $data]);
   }
 
+  public function removeToken(string $id): void
+  {
+    $filter = $this->getIdFilter($id);
+    $this->updateOne($filter, ['$unset' => ['refreshToken' => '']]);
+  }
+
   public function delete(string $id): bool
   {
     $filter = $this->getIdFilter($id);

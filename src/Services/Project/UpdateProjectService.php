@@ -14,7 +14,6 @@ class UpdateProjectService
 {
   private ProjectModel $projectModel;
   private UpdateProjectDataValidator $validator;
-  private SecurityService $securityService;
 
   public function __construct()
   {
