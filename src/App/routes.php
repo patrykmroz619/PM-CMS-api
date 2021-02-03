@@ -26,6 +26,7 @@ return function (App $app) {
     $group->get('/users', [UserController::class, 'getActiveUser']);
     $group->patch('/users', [UserController::class, 'updateUserData']);
     $group->delete('/users', [UserController::class, 'deleteUser']);
+    $group->put('/users/password', [UserController::class, 'changePassword']);
 
     $group->get('/projects', [ProjectController::class, 'getProjects']);
     $group->post('/projects', [ProjectController::class, 'createProject']);

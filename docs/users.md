@@ -20,7 +20,7 @@ PATCH /users
 
 ## Succes response
 
-- Status: `200`
+- Status: `201`
 
 - body
 
@@ -79,6 +79,51 @@ The body of request should be empty.
 | Status |     type     |           Description            |
 | :----: | :----------: | :------------------------------: |
 | `400`  | DELETE_ERROR | Deleting user was not completed. |
+
+### Response body
+
+```typeScript
+{
+  "statusCode": status,
+  "error": {
+    "type": type,
+    "description": description
+  }
+}
+```
+
+# Change password
+
+```http
+PUT /users/password
+```
+
+- Request header: `Authorization: "bearer <accessToken>"`
+
+## Request body
+
+```typescript
+{
+  "currentPassword": string,
+  "newPassword": string
+}
+```
+
+## Succes response
+
+- status: `201`
+
+- empty response body
+
+## Error responses
+
+| Status |           type           |               Description               |
+| :----: | :----------------------: | :-------------------------------------: |
+| `400`  | PASSWORD_WAS_NOT_UPDATED |  The passed password was not updated.   |
+| `400`  |   PASSWORD_NOT_PASSED    |      The password was not passed.       |
+| `400`  | INVALID_CURRENT_PASSWORD | The passed current password is invalid. |
+| `400`  |   INVALID_NEW_PASSWORD   |   The passed new password is invalid.   |
+| `400`  |     INVALID_PASSWORD     |      _Information about an error_       |
 
 ### Response body
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\Models\User;
 
 use Api\AppExceptions\SignInExceptions\UserNotFoundException;
+use MongoDB\UpdateResult;
 
 class UserModel extends AbstractUserModel
 {
@@ -25,10 +26,10 @@ class UserModel extends AbstractUserModel
     return $this->findUser(['email' => $email]);
   }
 
-  public function update(string $id, array $data): void
+  public function update(string $id, array $data): UpdateResult
   {
     $filter = $this->getIdFilter($id);
-    $this->updateOne($filter, ['$set' => $data]);
+    return $this->updateOne($filter, ['$set' => $data]);
   }
 
   public function removeToken(string $id): void
