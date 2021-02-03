@@ -38,31 +38,28 @@ abstract class AbstractUserDataValidator
   protected function nameAndSurnameValidate(array $userData): bool
   {
     $pattern = "/^[a-zA-ZąĄćĆęĘśŚóÓłŁńŃżŻźŹ][a-zA-ZąĄćĆęĘśŚóÓłŁńŃżŻźŹ ,'-]+$/u";
+    if(isset($userData['name']) && $userData['name'] != '')
+    {
+      if (!preg_match($pattern, $userData['name']) || strlen($userData['name']) > 35)
+        throw new InvalidNameException();
+    }
 
-    if (
-      isset($userData['name'])
-      && (!preg_match($pattern, $userData['name'])
-      || strlen($userData['name']) > 35)
-    )
-      throw new InvalidNameException();
-
-    if (
-      isset($userData['surname'])
-      && (!preg_match($pattern, $userData['surname'])
-      || strlen($userData['surname']) > 35)
-    )
-      throw new InvalidSurnameException();
+    if(isset($userData['surname']) && $userData['surname'] != '')
+    {
+      if (!preg_match($pattern, $userData['surname']) || strlen($userData['surname']) > 35)
+        throw new InvalidSurnameException();
+    }
 
     return true;
   }
 
   protected function companyNameValidate(array $userData): bool
   {
-    if (
-      isset($userData['company'])
-      && strlen($userData['company']) > 35
-    )
-      throw new InvalidCompanyNameException();
+    if(isset($userData['company']) && $userData['company'] != '')
+    {
+      if (strlen($userData['company']) > 35)
+        throw new InvalidCompanyNameException();
+    }
 
     return true;
   }
