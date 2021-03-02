@@ -7,7 +7,6 @@ namespace Api\Services\Project;
 use Api\AppExceptions\ProjectExceptions\ProjectNameIsNotUniqueException;
 use Api\AppExceptions\ProjectExceptions\ProjectNotFoundException;
 use Api\Models\Project\ProjectModel;
-use Api\Services\SecurityService;
 use Api\Validators\ProjectData\UpdateProjectDataValidator;
 
 class UpdateProjectService
@@ -37,7 +36,6 @@ class UpdateProjectService
   private function validate(string $id, array $data): array
   {
     $updateData = $this->validator->validate($data);
-    $updateData['updatedAt'] = time();
 
     if(isset($updateData['name'])) {
       $this->checkThatProjectNameIsUnique($data['uid'], $updateData['name'], $id);

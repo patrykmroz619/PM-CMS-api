@@ -35,7 +35,6 @@ class ProjectCreatorService
 
     $currentTime = time();
     $projectData['createdAt'] = $currentTime;
-    $projectData['updatedAt'] = $currentTime;
     $projectData['published'] = true;
 
     return $projectData;

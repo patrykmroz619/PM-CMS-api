@@ -46,7 +46,7 @@ The body of request should be empty.
   "userId": string,
   "name": string,
   "createdAt": timestamp,
-  "updatedAt": timestamp,
+  "apiKey": string | undefined,
   "published": boolean
 }
 ```
@@ -97,7 +97,7 @@ POST /projects
   "userId": string,
   "name": string,
   "createdAt": timestamp,
-  "updatedAt": timestamp,
+  "apiKey": string | undefined,
   "published": boolean
 }
 ```
@@ -150,8 +150,8 @@ PATCH /projects/{projectId}
   "userId": string,
   "name": string,
   "createdAt": timestamp,
-  "updatedAt": timestamp,
-  "published": true
+  "apiKey": string | undefined,
+  "published": boolean
 }
 ```
 
@@ -191,6 +191,46 @@ The body of request should be empty.
 - status: `204`
 
 - empty response body
+
+## Error responses
+
+| Status |       type        |        Description         |
+| :----: | :---------------: | :------------------------: |
+| `400`  | PROJECT_NOT_FOUND | The project was not found. |
+
+### Response body
+
+```typeScript
+{
+  "statusCode": status,
+  "error": {
+    "type": type,
+    "description": description
+  }
+}
+```
+
+# Generate api key
+
+```http
+POST /projects/api-key/{projectId}
+```
+
+- Request header: `Authorization: "bearer <accessToken>"`
+
+## Request body
+
+The body of request should be empty.
+
+## Succes response
+
+- status: `204`
+
+```typescript
+{
+  apiKey: string;
+}
+```
 
 ## Error responses
 

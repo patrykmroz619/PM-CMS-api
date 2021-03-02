@@ -9,7 +9,6 @@ use Slim\Routing\RouteCollectorProxy;
 use Api\Controllers\AuthController;
 use Api\Controllers\ContentModelController;
 use Api\Controllers\ContentFieldController;
-use Api\Controllers\MainController;
 use Api\Controllers\UserController;
 use Api\Controllers\ProjectController;
 use Api\Controllers\RecordController;
@@ -33,6 +32,7 @@ return function (App $app) {
     $group->get('/projects/{id}', [ProjectController::class, 'getProjectById']);
     $group->patch('/projects/{id}', [ProjectController::class, 'updateProject']);
     $group->delete('/projects/{id}', [ProjectController::class, 'deleteProject']);
+    $group->post('/projects/api-key/{id}', [ProjectController::class, 'generateApiKey']);
 
     $group->get('/content-models/{projectId}', [ContentModelController::class, 'getContentModels']);
     $group->post('/content-models/{projectId}', [ContentModelController::class, 'createContentModel']);

@@ -21,6 +21,20 @@ class TokenService {
     return self::generateToken($uid, false);
   }
 
+  public static function generateApiKeyForProject(string $projectId, string $userId): string
+  {
+    $config = self::getConfig();
+
+    $payload = [
+      'projectId' => $projectId,
+      'userId' => $userId
+    ];
+
+    $jwt = JWT::encode($payload, $config['hmacKey']);
+
+    return $jwt;
+  }
+
   public static function validateToken(string $tokenAsString): ?array
   {
     $config = self::getConfig();

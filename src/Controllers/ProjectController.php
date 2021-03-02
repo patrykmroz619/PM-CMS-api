@@ -4,28 +4,31 @@ declare(strict_types=1);
 
 namespace API\Controllers;
 
-use Api\AppExceptions\ProjectExceptions\ProjectNotFoundException;
-use Api\Models\Project\ProjectModel;
-use Api\Services\Project\ProjectCreatorService;
-use Api\Services\Project\UpdateProjectService;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Api\Services\ProjectService;
+use Api\AppExceptions\ProjectExceptions\ProjectNotFoundException;
+use Api\Models\Project\ProjectModel;
+use Api\Services\Project\ProjectApiKeyService;
+use Api\Services\Project\ProjectCreatorService;
+use Api\Services\Project\UpdateProjectService;
 
 class ProjectController {
   private ProjectCreatorService $projectCreatorService;
   private UpdateProjectService $updateProjectService;
+  private ProjectApiKeyService $projectApiKeyService;
   private ProjectModel $projectModel;
 
   public function __construct(
     ProjectCreatorService $projectCreatorService,
     UpdateProjectService $updateProjectService,
+    ProjectApiKeyService $projectApiKeyService,
     ProjectModel $projectModel
   )
   {
-    $this->projectModel = $projectModel;
     $this->projectCreatorService = $projectCreatorService;
     $this->updateProjectService = $updateProjectService;
+    $this->projectApiKeyService = $projectApiKeyService;
+    $this->projectModel = $projectModel;
   }
 
   public function createProject(Request $request, Response $response): Response
@@ -50,7 +53,7 @@ class ProjectController {
     return $response;
   }
 
-  public function getProjectById (Request $request, Response $response, string $id): Response
+  public function getProjectById(Request $request, Response $response, string $id): Response
   {
     $body = $request->getParsedBody();
 
@@ -63,7 +66,7 @@ class ProjectController {
     return $response;
   }
 
-  public function updateProject (Request $request, Response $response, string $id): Response
+  public function updateProject(Request $request, Response $response, string $id): Response
   {
     $body = $request->getParsedBody();
     $updatedProject = $this->updateProjectService->update($id, $body);
@@ -72,7 +75,7 @@ class ProjectController {
     return $response;
   }
 
-  public function deleteProject (Request $request, Response $response, string $id): Response
+  public function deleteProject(Request $request, Response $response, string $id): Response
   {
     $body = $request->getParsedBody();
 
@@ -80,5 +83,17 @@ class ProjectController {
 
     $response->getBody()->write(json_encode([]));
     return $response->withStatus(204);
+  }
+
+  public function generateApiKey(Request $request, Response $response, string $id): Response
+  {
+    $body = $request->getParsedBody();
+
+    $apiKey = $this->projectApiKeyService->generateApiKey($id, $body['uid']);
+
+    $responseBody = ['apiKey' => $apiKey];
+
+    $response->getBody()->write(json_encode($responseBody));
+    return $response->withStatus(201);
   }
 }
