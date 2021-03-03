@@ -6,7 +6,7 @@ namespace Api\Services\Project;
 
 use Api\AppExceptions\ProjectExceptions\ProjectNotFoundException;
 use Api\Models\Project\ProjectModel;
-use Api\Services\Token\PublicApiTokenService;
+use Api\Services\Token\GeneratedApiTokenService;
 use Exception;
 
 class ProjectApiKeyService
@@ -20,7 +20,7 @@ class ProjectApiKeyService
 
   public function generateApiKey(string $projectId, string $userId): string
   {
-    $key = PublicApiTokenService::generateToken($projectId, $userId);
+    $key = GeneratedApiTokenService::generateToken($projectId, $userId);
 
     $this->validate($projectId, $userId);
 
