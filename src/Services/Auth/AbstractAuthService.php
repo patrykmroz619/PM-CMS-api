@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Api\Services\Auth;
 
-use Api\Services\TokenService;
+use Api\Services\Token\AuthTokenToPanelService;
 
 abstract class AbstractAuthService
 {
   protected function getTokens(string $userId): array
   {
-    $accessToken = TokenService::getAccessToken($userId);
-    $refreshToken = TokenService::getRefreshToken($userId);
+    $accessToken = AuthTokenToPanelService::getAccessToken($userId);
+    $refreshToken = AuthTokenToPanelService::getRefreshToken($userId);
 
     $tokens = [
       'accessToken' => $accessToken,

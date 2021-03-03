@@ -8,14 +8,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Api\AppExceptions\AuthExceptions\InvalidAccessTokenException;
-use Api\Services\TokenService;
+use Api\Services\Token\AuthTokenToPanelService;
 
 class AuthMiddleware {
   public function __invoke(Request $request, RequestHandler $handler): Response
   {
-    $token = TokenService::getTokenFromRequest($request);
+    $token = AuthTokenToPanelService::getTokenFromRequest($request);
 
-    $tokenArray = (array) TokenService::validateToken($token);
+    $tokenArray = (array) AuthTokenToPanelService::validateToken($token);
 
     if(!empty($tokenArray) && $tokenArray['access'])
       return $handler->handle($this->applyUserIdFromTokenToParsedBody($request, $tokenArray));

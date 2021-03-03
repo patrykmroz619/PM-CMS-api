@@ -6,7 +6,7 @@ namespace Api\Services\Auth;
 
 use Api\AppExceptions\AuthExceptions\InvalidRefreshTokenException;
 use Api\Models\User\UserModel;
-use Api\Services\TokenService;
+use Api\Services\Token\AuthTokenToPanelService;
 
 class RefreshTokenService extends AbstractAuthService
 {
@@ -30,7 +30,7 @@ class RefreshTokenService extends AbstractAuthService
 
   private function validateRefreshToken(string $token): array
   {
-    $validToken = TokenService::validateToken($token);
+    $validToken = AuthTokenToPanelService::validateToken($token);
 
     if(!$validToken || $validToken['access'])
       throw new InvalidRefreshTokenException();

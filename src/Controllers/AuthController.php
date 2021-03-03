@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Api\Services\Auth\RefreshTokenService;
 use Api\Services\Auth\SignInService;
 use Api\Services\Auth\SignUpService;
+use Api\Services\Token\AuthTokenToPanelService;
 use Api\Services\TokenService;
 
 class AuthController {
@@ -53,7 +54,7 @@ class AuthController {
 
   public function refreshToken(Request $request, Response $response): Response
   {
-    $token = TokenService::getTokenFromRequest($request);
+    $token = AuthTokenToPanelService::getTokenFromRequest($request);
 
     $newTokens = $this->refreshTokenService->refreshToken($token);
 

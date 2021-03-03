@@ -6,7 +6,6 @@ namespace Api\Services\Auth;
 
 use Api\AppExceptions\SignInExceptions\PasswordInvalidException;
 use Api\Models\User\UserModel;
-use Api\Services\TokenService;
 use Api\Validators\UserData\SignInValidator;
 
 class SignInService extends AbstractAuthService
