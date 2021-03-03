@@ -9,17 +9,19 @@ use Slim\Routing\RouteCollectorProxy;
 use Api\Controllers\AuthController;
 use Api\Controllers\ContentModelController;
 use Api\Controllers\ContentFieldController;
+use Api\Controllers\GeneratedApiController;
 use Api\Controllers\UserController;
 use Api\Controllers\ProjectController;
 use Api\Controllers\RecordController;
-use Api\Middlewares\AuthMiddleware;
+use Api\Middlewares\GeneratedApiAuthMiddleware;
+use Api\Middlewares\PanelAuthMiddleware;
 
 return function (App $app) {
   $app->post('/login', [AuthController::class, 'signIn']);
   $app->post('/register', [AuthController::class, 'signUp']);
   $app->post('/refresh', [AuthController::class, 'refreshToken']);
 
-  $app->group('', function (RouteCollectorProxy $group) {
+  $app->group('', function(RouteCollectorProxy $group) {
     $group->post('/logout', [AuthController::class, 'logout']);
 
     $group->get('/users', [UserController::class, 'getActiveUser']);
@@ -47,5 +49,10 @@ return function (App $app) {
     $group->post('/records/{contentModelId}', [RecordController::class, 'addRecord']);
     $group->put('/records/{recordId}', [RecordController::class, 'updateRecord']);
     $group->delete('/records/{recordId}', [RecordController::class, 'deleteRecord']);
-  })->add(new AuthMiddleware());
+  })->add(new PanelAuthMiddleware());
+
+  $app->group('/api', function(RouteCollectorProxy $group) {
+    $group->get('/{endpoint}', [GeneratedApiController::class, 'list']);
+    $group->get('/{endpoint}/{recordId}', [GeneratedApiController::class, 'get']);
+  })->add(new GeneratedApiAuthMiddleware());
 };

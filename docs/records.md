@@ -23,6 +23,7 @@ The body of request should be empty.
       "id": string
       "userId": string,
       "contentModelId": string,
+      "createdAt": timestamp,
       "data": array<
         {
           "name": string
@@ -66,6 +67,7 @@ POST /records/{contentModelId}
   "id": string
   "userId": string,
   "contentModelId": string,
+  "createdAt": timestamp,
   "data": array<
     {
       "name": string

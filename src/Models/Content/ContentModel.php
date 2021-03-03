@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Api\Models\Content;
 
 use Api\AppExceptions\ContentModelExceptions\ContentModelNotFoundException;
-use MongoDB\InsertOneResult;
 use MongoDB\UpdateResult;
 
 class ContentModel extends AbstractContentModel
@@ -23,6 +22,11 @@ class ContentModel extends AbstractContentModel
   public function findByProjectIdAndName(string $projectId, string $name): array
   {
     return $this->findOne(['projectId' => $projectId, 'name' => $name]);
+  }
+
+  public function findByProjectIdAndEndpoint(string $projectId, string $endpoint): array
+  {
+    return $this->findOne(['projectId' => $projectId, 'endpoint' => $endpoint]);
   }
 
   public function findByIdAndUserId(string $contentModelId, string $userId): array

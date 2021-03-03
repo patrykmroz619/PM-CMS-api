@@ -21,6 +21,7 @@ class AddRecordService extends AbstractRecordService
     $dataToSave = [
       'userId' => $requestData['uid'],
       'contentModelId' => $contentModelId,
+      'createdAt' => time(),
       'data' => $newRecordData
     ];
 
