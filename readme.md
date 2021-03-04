@@ -69,3 +69,5 @@ composer run-api
 - [Content model fields](docs/content-fields.md) : `/content-model-fields`
 
 - [Records](docs/records.md) : `/records`
+
+- [Generated API](docs/generated-api.md) : `/api/{contentModelEndpoint}`
