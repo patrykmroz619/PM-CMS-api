@@ -41,7 +41,12 @@ abstract class AbstractRecordService
     {
       $correspondingRecordItem = $this->getCorrespondingRecordItem($recordData, (array) $fieldData);
 
-      $validatedRecordItem = $this->validateRecordItem($correspondingRecordItem, (array) $fieldData, $contentModelId, $recordId);
+      $validatedRecordItem = $this->validateRecordItem(
+        $correspondingRecordItem,
+        (array) $fieldData,
+        $contentModelId,
+        $recordId
+      );
 
       array_push($validatedRecord, $validatedRecordItem);
     }

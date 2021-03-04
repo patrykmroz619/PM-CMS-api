@@ -27,7 +27,7 @@ class RecordModel extends AbstractRecordModel
   {
     $filter = [
       'contentModelId' => $contentModelId,
-      'record' => ['$elemMatch' => ['name' => $name, 'value' => $value]]
+      'data' => ['$elemMatch' => ['name' => $name, 'value' => $value]]
     ];
 
     return $this->findOne($filter);
