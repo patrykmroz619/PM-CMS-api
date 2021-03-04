@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Api\AppExceptions\ProjectExceptions\ProjectNotFoundException;
 use Api\Models\Project\ProjectModel;
+use Api\Services\Project\DeleteProjectService;
 use Api\Services\Project\ProjectApiKeyService;
 use Api\Services\Project\ProjectCreatorService;
 use Api\Services\Project\UpdateProjectService;
@@ -15,18 +16,21 @@ use Api\Services\Project\UpdateProjectService;
 class ProjectController {
   private ProjectCreatorService $projectCreatorService;
   private UpdateProjectService $updateProjectService;
+  private DeleteProjectService $deleteProjectService;
   private ProjectApiKeyService $projectApiKeyService;
   private ProjectModel $projectModel;
 
   public function __construct(
     ProjectCreatorService $projectCreatorService,
     UpdateProjectService $updateProjectService,
+    DeleteProjectService $deleteProjectService,
     ProjectApiKeyService $projectApiKeyService,
     ProjectModel $projectModel
   )
   {
     $this->projectCreatorService = $projectCreatorService;
     $this->updateProjectService = $updateProjectService;
+    $this->deleteProjectService = $deleteProjectService;
     $this->projectApiKeyService = $projectApiKeyService;
     $this->projectModel = $projectModel;
   }
@@ -79,7 +83,7 @@ class ProjectController {
   {
     $body = $request->getParsedBody();
 
-    $this->projectModel->deleteByIdAndUserId($id, $body['uid']);
+    $this->deleteProjectService->deleteProject($id, $body['uid']);
 
     $response->getBody()->write(json_encode([]));
     return $response->withStatus(204);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\Controllers;
 
 use Api\Models\Content\ContentModel;
+use Api\Models\Record\RecordModel;
 use Api\Services\ContentModel\CreateContentModelService;
 use Api\Services\ContentModel\UpdateContentModelService;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -14,16 +15,19 @@ class ContentModelController
 {
   private CreateContentModelService $createContentModelService;
   private UpdateContentModelService $updateContentModelService;
+  private RecordModel $recordModel;
   private ContentModel $contentModel;
 
   public function __construct(
     CreateContentModelService $createContentModelService,
     UpdateContentModelService $updateContentModelService,
+    RecordModel $recordModel,
     ContentModel $contentModel
   )
   {
     $this->createContentModelService = $createContentModelService;
     $this->updateContentModelService = $updateContentModelService;
+    $this->recordModel = $recordModel;
     $this->contentModel = $contentModel;
   }
 
@@ -62,6 +66,8 @@ class ContentModelController
     $body = $request->getParsedBody();
 
     $this->contentModel->deleteByIdAndUserId($contentModelId, $body['uid']);
+
+    $this->recordModel->deleteManyByContentModelId($contentModelId);
 
     $response->getBody()->write(json_encode([]));
     return $response->withStatus(204);

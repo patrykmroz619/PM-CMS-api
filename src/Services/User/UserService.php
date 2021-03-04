@@ -7,16 +7,19 @@ namespace Api\Services\User;
 use Api\AppExceptions\UserExceptions\DeleteUserWasNotCompletedException;
 use Api\Models\Project\ProjectModel;
 use Api\Models\User\UserModel;
+use Api\Services\Project\DeleteProjectService;
 use Api\Validators\UserData\UpdateUserDataValidator;
 
 class UserService {
   private UserModel $userModel;
   private UpdateUserDataValidator $validator;
+  private DeleteProjectService $deleteProjectService;
 
   public function __construct()
   {
     $this->userModel = new UserModel();
     $this->validator = new UpdateUserDataValidator();
+    $this->deleteProjectService = new DeleteProjectService();
   }
 
   public function getUser(string $userId): array
@@ -47,7 +50,6 @@ class UserService {
     if(!$complete)
       throw new DeleteUserWasNotCompletedException();
 
-    $projectModel = new ProjectModel();
-    $projectModel->deleteManyByUserId($uid);
+    $this->deleteProjectService->deleteManyByUserId($uid);
   }
 }

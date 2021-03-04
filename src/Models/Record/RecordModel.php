@@ -55,4 +55,11 @@ class RecordModel extends AbstractRecordModel
     if($result->getDeletedCount() == 0)
       throw new RecordNotFoundException();
   }
+
+  public function deleteManyByContentModelId(string $contentModelId): void
+  {
+    $fitler = ['contentModelId' => $contentModelId];
+
+    $this->deleteMany($fitler);
+  }
 }
