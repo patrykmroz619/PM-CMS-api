@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Api\Models\Record;
 
 use Api\AppExceptions\RecordExceptions\RecordNotFoundException;
-use MongoDB\DeleteResult;
 use MongoDB\UpdateResult;
 
 class RecordModel extends AbstractRecordModel

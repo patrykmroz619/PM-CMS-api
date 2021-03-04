@@ -15,7 +15,6 @@ use Api\Services\ContentFields\AbstractContentField;
 use Api\Services\ContentFields\BooleanField;
 use Api\Services\ContentFields\ColorField;
 use Api\Services\ContentFields\DateField;
-use Api\Services\ContentFields\MediaField;
 use Api\Services\ContentFields\NumberField;
 use Api\Services\ContentFields\TextField;
 
@@ -88,8 +87,6 @@ class ContentFieldService
         return new NumberField($data);
       case 'boolean':
         return new BooleanField($data);
-      case 'media':
-        return new MediaField($data);
       case 'date':
         return new DateField($data);
       case 'color':
