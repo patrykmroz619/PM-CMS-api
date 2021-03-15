@@ -6,7 +6,6 @@ namespace Api\Services\ContentModel;
 
 use Api\AppExceptions\ContentModelExceptions\ContentModelNameIsNotUnique;
 use Api\AppExceptions\ContentModelExceptions\EndpointIsNotUniqueException;
-use Api\Models\Content\ContentModel;
 
 abstract class AbstractContentModelService
 {

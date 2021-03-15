@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Api\Services\Token;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Api\AppExceptions\AuthExceptions\JWTWasNotPassedException;
-use Api\Settings\Settings;
 use Exception;
+use Api\AppExceptions\AuthExceptions\JWTWasNotPassedException;
 use Firebase\JWT\JWT;
 
 abstract class AbstractTokenService
@@ -23,12 +22,11 @@ abstract class AbstractTokenService
     return $token;
   }
 
-  public static function validateToken(string $tokenAsString): ?array
+  protected static function validateToken(string $tokenAsString, array $config): ?array
   {
-    $config = self::getConfig();
     try
     {
-      JWT::$leeway = $config['leeway'];
+      JWT::$leeway = $config['leeway'] ?? 0;
       $token = (array) JWT::decode($tokenAsString, $config['hmacKey'], array('HS256'));
 
       if(empty($token))
@@ -42,18 +40,5 @@ abstract class AbstractTokenService
     }
   }
 
-  protected static function getConfig(): array
-  {
-    $urls = Settings::getAppsUrl();
-    $tokenConfig = Settings::getTokenConfig();
-    return [
-      'api_url' => $urls['api'],
-      'client_url' => $urls['client'],
-      'jti' => $tokenConfig['jti'],
-      'access_exp' => $tokenConfig['access_exp'],
-      'refresh_exp' => $tokenConfig['refresh_exp'],
-      'leeway' => $tokenConfig['leeway'],
-      'hmacKey' => $tokenConfig['hmacKey']
-    ];
-  }
+  abstract static function validate(string $tokenAsString): ?array;
 }

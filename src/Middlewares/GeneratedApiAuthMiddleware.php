@@ -17,7 +17,7 @@ class GeneratedApiAuthMiddleware {
   public function __invoke(Request $request, RequestHandler $handler): Response
   {
     $token = GeneratedApiTokenService::getTokenFromRequest($request);
-    $tokenArray = (array) GeneratedApiTokenService::validateToken($token);
+    $tokenArray = (array) GeneratedApiTokenService::validate($token);
 
     if(!empty($tokenArray) && isset($tokenArray['apiKey'])) {
       $this->checkIfTheProjectIsPublished($tokenArray);

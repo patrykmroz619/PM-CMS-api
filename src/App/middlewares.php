@@ -13,9 +13,6 @@ use Api\Middlewares\SetContentTypeMiddleware;
 
 return function (App $app) {
   $settings = Settings::getErrorMiddlewareConfig();
-  $app->add(new CorsMiddleware());
-  $app->add(new SetContentTypeMiddleware());
-  $app->add(new JSONBodyParserMiddleware());
 
   $errorMiddleware = $app->addErrorMiddleware(
     $settings['displayErrorDetails'],
@@ -23,8 +20,13 @@ return function (App $app) {
     $settings['logErrorDetails']
   );
 
-  if($_ENV['MODE'] === 'PRODUCTION') {
+  if(getenv('MODE') === 'PRODUCTION') {
     $errorHandler = new ApiErrorHandler($app->getCallableResolver(), $app->getResponseFactory());
     $errorMiddleware->setDefaultErrorHandler($errorHandler);
   }
+
+  $app->add(new CorsMiddleware());
+  $app->addRoutingMiddleware();
+  $app->add(new SetContentTypeMiddleware());
+  $app->add(new JSONBodyParserMiddleware());
 };

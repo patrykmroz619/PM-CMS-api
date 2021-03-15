@@ -117,13 +117,13 @@ PUT /users/password
 
 ## Error responses
 
-| Status |           type           |               Description               |
-| :----: | :----------------------: | :-------------------------------------: |
-| `400`  | PASSWORD_WAS_NOT_UPDATED |  The passed password was not updated.   |
-| `400`  |   PASSWORD_NOT_PASSED    |      The password was not passed.       |
-| `400`  | INVALID_CURRENT_PASSWORD | The passed current password is invalid. |
-| `400`  |   INVALID_NEW_PASSWORD   |   The passed new password is invalid.   |
-| `400`  |     INVALID_PASSWORD     |      _Information about an error_       |
+| Status |           type           |             Description              |
+| :----: | :----------------------: | :----------------------------------: |
+| `400`  | PASSWORD_WAS_NOT_UPDATED | The passed password was not updated. |
+| `400`  |   PASSWORD_NOT_PASSED    |     The password was not passed.     |
+| `400`  | INVALID_CURRENT_PASSWORD |   The current password is invalid.   |
+| `400`  |   INVALID_NEW_PASSWORD   | The passed new password is invalid.  |
+| `400`  |     INVALID_PASSWORD     |     _Information about an error_     |
 
 ### Response body
 

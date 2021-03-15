@@ -4,6 +4,7 @@ namespace Api\Services\ContentFields;
 
 use Api\AppExceptions\RecordExceptions\InvalidRecordValueException;
 use Api\Validators\FieldDataValidators\DateFieldValidator;
+use DateTime;
 
 class DateField extends AbstractContentField
 {
@@ -15,7 +16,7 @@ class DateField extends AbstractContentField
 
   public function validateRecordItem(array $recordItem): array
   {
-    $this->isValueTimestamp($recordItem);
+    $this->isValidDate($recordItem);
 
     return [
       'name' => $recordItem['name'],
@@ -23,9 +24,16 @@ class DateField extends AbstractContentField
     ];
   }
 
-  private function isValueTimestamp(array $recordItem): void
+  private function isValidDate(array $recordItem): void
   {
-    if(!is_int($recordItem['value']))
-      throw new InvalidRecordValueException($recordItem['name'], 'The value must be a timestamp.');
+    if(!$this->validateDate($recordItem['value']))
+      throw new InvalidRecordValueException($recordItem['name'], 'The value is not valid date.');
+  }
+
+  private function validateDate(string $date): bool
+  {
+    $format = 'Y-m-d';
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) == $date;
   }
 }

@@ -9,7 +9,7 @@ class InvalidCurrentPasswordException extends UserException
   public function __construct()
   {
     parent::__construct(
-      'The passed current password is invalid.',
+      'The current password is invalid.',
       'INVALID_CURRENT_PASSWORD'
     );
   }

@@ -30,7 +30,7 @@ class RefreshTokenService extends AbstractAuthService
 
   private function validateRefreshToken(string $token): array
   {
-    $validToken = AuthTokenToPanelService::validateToken($token);
+    $validToken = AuthTokenToPanelService::validate($token);
 
     if(!$validToken || $validToken['access'])
       throw new InvalidRefreshTokenException();

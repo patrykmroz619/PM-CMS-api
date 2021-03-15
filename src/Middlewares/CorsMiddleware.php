@@ -7,24 +7,24 @@ namespace Api\Middlewares;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Slim\Psr7\Factory\ResponseFactory;
 use Api\Settings\Settings;
+use Slim\Routing\RouteContext;
 
 class CorsMiddleware {
   public function __invoke(Request $request, RequestHandler $handler): Response
   {
-    if($request->getMethod() !== 'OPTIONS') {
-      $response = $handler->handle($request);
-    } else {
-      $responseFactory = new ResponseFactory();
-      $response = $responseFactory->createResponse();
-      $response->withStatus(200);
-    }
+    $routeContext = RouteContext::fromRequest($request);
+    $routingResults = $routeContext->getRoutingResults();
+    $methods = $routingResults->getAllowedMethods();
+
+    $response = $handler->handle($request);
 
     $urls = Settings::getAppsUrl();
 
-    return $response->withHeader('Access-Control-Allow-Origin', $urls['client'])
-    ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-    ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    $response = $response->withHeader('Access-Control-Allow-Origin', $urls['client']);
+    $response = $response->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization');
+    $response = $response->withHeader('Access-Control-Allow-Methods', implode(',', $methods));
+
+    return $response;
   }
 }

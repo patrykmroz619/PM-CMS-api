@@ -15,7 +15,7 @@ class PanelAuthMiddleware {
   {
     $token = AuthTokenToPanelService::getTokenFromRequest($request);
 
-    $tokenArray = (array) AuthTokenToPanelService::validateToken($token);
+    $tokenArray = (array) AuthTokenToPanelService::validate($token);
 
     if(!empty($tokenArray) && $tokenArray['access'])
       return $handler->handle($this->applyUserIdFromTokenToParsedBody($request, $tokenArray));

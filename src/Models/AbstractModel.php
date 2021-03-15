@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Api\Models;
 
+use Api\AppExceptions\AppException;
 use MongoDB\Collection;
 use Api\Database\DatabaseConnector;
+use Exception;
 use MongoDB\BSON\ObjectId;
 use MongoDB\DeleteResult;
 use MongoDB\InsertOneResult;
@@ -68,7 +70,11 @@ abstract class AbstractModel {
 
   protected function getIdFilter(string $id): array
   {
-    return ['_id' => new ObjectId($id)];
+    try {
+      return ['_id' => new ObjectId($id)];
+    } catch (Exception $e) {
+      throw new AppException('Invalid id', 404, 'NOT_FOUND');
+    }
   }
 
   protected function convertObjectIdOnString(array $item): array

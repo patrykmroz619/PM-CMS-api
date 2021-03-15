@@ -13,6 +13,7 @@ use Api\Controllers\GeneratedApiController;
 use Api\Controllers\UserController;
 use Api\Controllers\ProjectController;
 use Api\Controllers\RecordController;
+use Api\Helpers\PreflightAction;
 use Api\Middlewares\GeneratedApiAuthMiddleware;
 use Api\Middlewares\PanelAuthMiddleware;
 
@@ -55,4 +56,7 @@ return function (App $app) {
     $group->get('/{endpoint}', [GeneratedApiController::class, 'list']);
     $group->get('/{endpoint}/{recordId}', [GeneratedApiController::class, 'get']);
   })->add(new GeneratedApiAuthMiddleware());
+
+  // Allow preflight requests
+  $app->options('/{routes:.*}', PreflightAction::class);
 };

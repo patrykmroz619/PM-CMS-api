@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace Api\Helpers;
 
 use Dotenv\Dotenv;
+use Exception;
 
 class EnvLoader {
 
   public static function load()
   {
-    $env = Dotenv::createImmutable(__DIR__ . '/../../');
+    try {
 
-    $env->load();
+      $env = Dotenv::createUnsafeImmutable(__DIR__ . '/../../');
+
+      $env->load();
+    } catch (Exception $e) {}
   }
 }
