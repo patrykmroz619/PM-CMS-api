@@ -22,7 +22,7 @@ class CorsMiddleware {
     $urls = Settings::getAppsUrl();
 
     $response = $response->withHeader('Access-Control-Allow-Origin', $urls['client']);
-    $response = $response->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization');
+    $response = $response->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization, sentry-trace');
     $response = $response->withHeader('Access-Control-Allow-Methods', implode(',', $methods));
 
     return $response;
