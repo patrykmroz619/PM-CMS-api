@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace Api\Models\ContentField;
 
 use Api\AppExceptions\ContentFieldExceptions\ContentFieldNotFoundException;
-use Api\Models\ContentField\AbstractContentFieldModel;
+use Api\Models\AbstractModel;
 use MongoDB\UpdateResult;
 
-class ContentFieldModel extends AbstractContentFieldModel
+class ContentFieldModel extends AbstractModel
 {
+  public function __construct()
+  {
+    $this->connectWithCollection('content models');
+  }
+
   public function getFields(string $contentModelId): array
   {
     $filter = $this->getIdFilter($contentModelId);

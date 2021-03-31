@@ -7,6 +7,7 @@ namespace Api\Helpers;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Handlers\ErrorHandler;
 use Api\AppExceptions\AppException;
+use Sentry;
 
 class ApiErrorHandler extends ErrorHandler {
   public const SERVER_ERROR = 'SERVER_ERROR';
@@ -18,11 +19,12 @@ class ApiErrorHandler extends ErrorHandler {
     $type = self::SERVER_ERROR;
     $description = 'An internal error has occurred while processing your request.';
 
-    if ($exception instanceof AppException)
-    {
+    if ($exception instanceof AppException) {
       $statusCode = $exception->getCode();
       $description = $exception->getMessage();
       $type = $exception->getType();
+    } else {
+      Sentry\captureLastError();
     }
 
     $error = [
