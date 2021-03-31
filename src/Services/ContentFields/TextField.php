@@ -19,10 +19,10 @@ class TextField extends AbstractContentField
   {
     $this->isValueString($recordItem);
 
-    if(isset($this->fieldData['minLength']))
+    if(isset($this->fieldData['minLength']) && $this->fieldData['minLength'])
       $this->validateMinLength($recordItem);
 
-    if(isset($this->fieldData['maxLength']))
+    if(isset($this->fieldData['maxLength']) && $this->fieldData['maxLength'])
       $this->validateMaxLength($recordItem);
 
     return [

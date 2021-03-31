@@ -19,13 +19,13 @@ class NumberField extends AbstractContentField
   {
     $this->isValueNumber($recordItem);
 
-    if(isset($this->fieldData['min']))
+    if(isset($this->fieldData['min']) && $this->fieldData['min'])
       $this->validateMinValue($recordItem);
 
-    if(isset($this->fieldData['max']))
+    if(isset($this->fieldData['max']) && $this->fieldData['max'])
       $this->validateMaxValue($recordItem);
 
-    if(isset($this->fieldData['integer']))
+    if(isset($this->fieldData['integer']) && $this->fieldData['integer'])
       $this->validateIsInteger($recordItem);
 
     return [
